@@ -19,15 +19,88 @@ int remaining_time=0;
 
 bool toggle=0;
 bool dduflag=0;
+bool flow_check=0;
+bool level_check=0;
+bool probe_check=0;
+bool check_flag=0; // Flag to indicate if error has been acknowledged by user
+
 
 unsigned long solenoid_stop=0;
 
-int optime[4]={6,8,10,12};
+int optime[3]={3,6,8};
 int prodtype[3]={150,250,400};
+// int Sfill_time[3]={10*240,(11*144)+60,13*90};
+int Sfill_default[3]={40 ,28 ,20 };
+int sfill_time=0;
 float base_calibration[3]={1.4,2.4,3.9};
 
 // Error blinking ticker for main screen
 Ticker error_blink(toggle_screen,500,0,MILLIS);
+
+void Override_alert()
+{
+    if(toggle)
+    {
+        if(flowoverride  && !flow_check)
+        {
+            digitalWrite(BUZZER,HIGH);
+            lcd.setCursor(0,0);
+            lcd.print("  FLOW SENSOR        ");
+            lcd.setCursor(0,1);
+            lcd.print("    OVERRIDE             ");
+            if (check_flag)
+            {
+                flow_check = 1; // Mark flow error as acknowledged
+                check_flag = 0; // Reset check flag for next error
+            }
+        }
+        else if(leveloverride && !level_check )
+        {
+            digitalWrite(BUZZER,HIGH);
+            lcd.setCursor(0,0);
+            lcd.print("  LEVEL SENSOR       ");
+            lcd.setCursor(0,1);
+            lcd.print("    OVERRIDE             ");
+            if (check_flag)
+            {
+                level_check = 1; // Mark level error as acknowledged
+                check_flag = 0; // Reset check flag for next error
+            }
+        }
+        else if(probeoverride && !probe_check && dduflag)
+        {
+            digitalWrite(BUZZER,HIGH);
+            lcd.setCursor(0,0);
+            lcd.print("  PT100 PROBE     ");
+            lcd.setCursor(0,1);
+            lcd.print("    OVERRIDE             ");
+            if (check_flag)
+            {
+                probe_check = 1; // Mark probe error as acknowledged
+                check_flag = 0; // Reset check flag for next error
+            }
+        }
+        else
+        {
+            // digitalWrite(BUZZER,LOW);
+            process_object.Check_ticker_stop(); // Stop the warning ticker if no overrides are active
+            lcd.clear();
+            check_flag = 0;
+            override_alert_flag = 0; // Reset override alert flag
+            probe_check=0;
+            level_check=0;
+            flow_check=0;
+        }
+    }
+    else{
+        // digitalWrite(BUZZER,LOW);
+        lcd.setCursor(0,0);
+        lcd.print("               ");
+        lcd.setCursor(0,1);
+        lcd.print("               ");
+    }
+
+}
  
 //DEFINATIONS
 lcdclass::lcdclass()
@@ -41,16 +114,9 @@ void toggle_screen()
 void lcdclass::lcd_setup()
 {
     Wire.begin();
-    // Wire.setClock(100000);
+    Wire.setClock(100000);
     lcd.backlight();
-    // lcd.clear();
-    // delay(5000);
-    
-    // lcd.clear();
     lcd.init();
-    // lcd.clear();
-    // lcd.backlight();
-    // lcd.clear();
     
     delay(100);
     // lcd.noBacklight();
@@ -181,28 +247,49 @@ void lcdclass::lcd_display()
             lcd.setCursor(1,0);
             lcd.print("CALIBRATION   ");    
             lcd.setCursor(1,1);
-            lcd.print("SAFETY TEMP.   "); 
+            lcd.print("OPERATING TIME   "); 
         break;
 
         case ServiceMenuScreen4:
             lcd.setCursor(1,0);
-            lcd.print("SAFETY TEMP.   ");  
+            lcd.print("OPERATING TIME   ");    
             lcd.setCursor(1,1);
-            lcd.print("PROBE CALB "); 
+            lcd.print("SEC.SAFETY TEMP   "); 
         break;
+
+        // case ServiceMenuScreen3:
+        //     lcd.setCursor(1,0);
+        //     lcd.print("CALIBRATION   ");    
+        //     lcd.setCursor(1,1);
+        //     lcd.print("SEC.SAFETY TEMP   "); 
+        // break;
 
         case ServiceMenuScreen5:
             lcd.setCursor(1,0);
-            lcd.print("PROBE CALB   "); 
+            lcd.print("SEC.SAFETY TEMP   ");  
             lcd.setCursor(1,1);
-            lcd.print("FACTORY RESET "); 
+            lcd.print("SEC.PROBE CALB "); 
         break;
 
-        case SDUServiceMenuScreen3:
+        case ServiceMenuScreen6:
             lcd.setCursor(1,0);
-            lcd.print("CALIBRATION   ");    
+            lcd.print("SEC.PROBE CALB   "); 
             lcd.setCursor(1,1);
-            lcd.print("FACTORY RESET   ");
+            lcd.print("SEC.TIME FACTOR     "); 
+        break;
+
+        case ServiceMenuScreen7:
+            lcd.setCursor(1,0);
+            lcd.print("SEC.TIME FACTOR  "); 
+            lcd.setCursor(1,1);
+            lcd.print("FACTORY SETTINGS"); 
+        break;
+
+        case SDUServiceMenuScreen4:
+            lcd.setCursor(1,0);
+            lcd.print("OPERATING TIME  ");    
+            lcd.setCursor(1,1);
+            lcd.print("FACTORY SETTINGS"); 
         break;
 
         case CalibrationSettings:
@@ -235,7 +322,7 @@ void lcdclass::lcd_display()
 
         case OperatingTimeSettings:
             lcd.setCursor(0,0);
-            lcd.print("SET TIME");
+            lcd.print("SET OPERATE TIME");
             lcd.setCursor(0,1);
             lcd.print(optime[optimecounter]);
             if(optime[optimecounter]<10.0){
@@ -269,15 +356,33 @@ void lcdclass::lcd_display()
             if(dduflag){
             lcd.print("DDU");
             lcd.print(prodtype[prodtypecounter]);
+            lcd.setCursor(6,1);
+            lcd.print("     ");
             variant=((prodtype[prodtypecounter])/10);
+
             }
             else
             {
                 lcd.print("SDU");
                 lcd.print(prodtype[prodtypecounter]);
+                lcd.setCursor(6,1);
+                lcd.print("     ");
                 variant=((prodtype[prodtypecounter])/10);
 
             }
+        break;
+
+        case TimeFactorSettings:
+            lcd.setCursor(0,0);
+            lcd.print("SET TIME FACTOR");
+            lcd.setCursor(0,1);
+            lcd.print("DDU");
+            lcd.print(prodtype[prodtypecounter]);
+            lcd.setCursor(6,1);
+            lcd.print("  ");
+            lcd.print(sfill_time);
+            lcd.print(" mins  ");
+            // variant=((prodtype[prodtypecounter])/10);
         break;
 
         case SolenoidControlSettings:
@@ -293,31 +398,47 @@ void lcdclass::lcd_display()
         
 
         case ProcessScreen:
-            digitalWrite(YELLOW_LED,HIGH);
-            digitalWrite(RED_LED,LOW);
+            digitalWrite(YELLOW_LED,LOW);
+            digitalWrite(RED_LED, HIGH);
+            process_object.error_check();
             if(process_flag)
             {
-                lcd.setCursor(0,0);
+                // lcd.setCursor(0,0);
                 // digitalWrite(RED_LED,HIGH);
                 // digitalWrite(YELLOW_LED,LOW);
-                lcd.print("PROCESS STARTED");
-            
-                if ((one_second_counter - previous_time) >= time_per_step)
+                if(override_alert_flag)
                 {
-                    previous_time = one_second_counter;
-                    if (remaining_volume > 0)
-                    {
-                        remaining_volume--;
-                        // Decrement 0.1L
-                    }
+                    Override_alert();
                 }
-                lcd.setCursor(0,1);
-                lcd.print("   ");
-                lcd.setCursor(3,1);
-                lcd.print(remaining_volume/10);
-                lcd.print(".");
-                lcd.print(remaining_volume%10);
-                lcd.print(" LITERS         ");
+                else
+                {
+                    // if(one_second_counter % 60 == 0)
+                    // {
+                    // Serial3.print("Heater Temp: ");
+                    // Serial3.println(calib_Heater1);
+                    // }
+
+                    // Serial3.println("In_process");
+                    lcd.setCursor(0,0);
+                    lcd.print("PROCESS STARTED");
+                
+                    if ((one_second_counter - previous_time) >= time_per_step)
+                    {
+                        previous_time = one_second_counter;
+                        if (remaining_volume > 0)
+                        {
+                            remaining_volume--;
+                            // Decrement 0.1L
+                        }
+                    }
+                    lcd.setCursor(0,1);
+                    lcd.print("   ");
+                    lcd.setCursor(3,1);
+                    lcd.print(remaining_volume/10);
+                    lcd.print(".");
+                    lcd.print(remaining_volume%10);
+                    lcd.print(" LITERS         ");
+                }
                 process_object.process_start();
             }
             else if(preheat_flag)
@@ -327,11 +448,11 @@ void lcdclass::lcd_display()
                 // digitalWrite(RED_LED,LOW);
                 lcd.print("PROCESS START  ");
                 lcd.setCursor(0,1);
-                lcd.print("PREHEATING...   ");
+                lcd.print("PRE-HEATING...   ");
                 process_object.boiler_preheat();
             }
 
-            process_object.error_check();
+            // process_object.error_check();
             // if(!error_check_flag && !temp_drop_flag)
             // {
             //     process_flag=1;
@@ -349,27 +470,70 @@ void lcdclass::lcd_display()
 
         case SecondaryFillTimer:
             process_object.error_check();
+            if(override_alert_flag)
+            {
+                Override_alert();
+            }
+            else
+            {
+                if(dryout_flag)
+                {
+                    lcd.setCursor(0,0);
+                    digitalWrite(RED_LED,HIGH);
+                    digitalWrite(YELLOW_LED,LOW);  
+                    
+                    lcd.print("SECONDARY BOILER");
+                    lcd.setCursor(0,1);
+                    lcd.print("FILLING...      ");
+                    if(!pauseflag)
+                    {
+                        Sec_time = pre_end_time - one_second_counter;
+                        // lcd.print(Sec_time);
+                    }
+                    if(!error_check_flag)
+                    {
+                    secondarytimerflag=1;
+                    process_object.dryout_fill();
+                    }
+                }
+                else
+                {
+
+                    lcd.setCursor(0,0);
+                    digitalWrite(RED_LED,HIGH);
+                    digitalWrite(YELLOW_LED,LOW);  
+                    
+                    lcd.print("SECONDARY BOILER");
+                    lcd.setCursor(0,1);
+                    lcd.print("FILLING...      ");
+                    if(!pauseflag)
+                    {
+                        Sec_time = pre_end_time - one_second_counter;
+                        // lcd.print(Sec_time);
+                    }
+                    if(!error_check_flag)
+                    {
+                    secondarytimerflag=1;
+                    process_object.secondary_fill();
+                    }
+
+                }
+            }
+        break;
+
+        case SecondaryFillCheck:
+            process_object.error_check();
             lcd.setCursor(0,0);
             digitalWrite(RED_LED,HIGH);
             digitalWrite(YELLOW_LED,LOW);  
             
             lcd.print("SECONDARY BOILER");
             lcd.setCursor(0,1);
-            lcd.print("FILLING...      ");
-            if(!pauseflag)
-            {
-                Sec_time = pre_end_time - one_second_counter;
-                // lcd.print(Sec_time);
-            }
-            // Sec_time = pre_end_time - one_second_counter;
-            // lcd.print(Sec_time);
-            // lcd.print("m ");
-
-
+            lcd.print("FILLING CHECK      ");
             if(!error_check_flag)
             {
             secondarytimerflag=1;
-            process_object.secondary_fill();
+            process_object.dryout_fill();
             }
         break;
 
@@ -410,16 +574,26 @@ void lcdclass::lcd_display()
 
         case FactoryResetScreen:
             lcd.setCursor(0,0);
-            lcd.print("FACTORY RESET ");
-            lcd.setCursor(1,1);
-            lcd.print("YES");
-            lcd.setCursor(12,1);
-            lcd.print("NO");
+            lcd.print("FACTORY SETTINGS ");
+            // lcd.setCursor(1,1);
+            // lcd.print("YES");
+            // lcd.setCursor(12,1);
+            // lcd.print("NO");
+        break;
+
+        case TestingScreen:
+            // lcd.setCursor(0,0);
+            // lcd.print("TESTING SCREEN   ");
+            // lcd.setCursor(0,1);
+            // lcd.print("NO FUNCTION    ");
+            process_object.parameter_test();
         break;
 
         case ErrorScreen:
+            // Serial3.println(error_check_flag);
             if(error_check_flag)
             {
+            
                 digitalWrite(RED_LED,LOW);
                 if(toggle)
                 {
@@ -439,10 +613,22 @@ void lcdclass::lcd_display()
                         digitalWrite(BUZZER,HIGH);
                         digitalWrite(YELLOW_LED,HIGH);
                         lcd.setCursor(0,0);
-                        lcd.print("PROCESS COMPLETE    ");
+                        // lcd.print("PROCESS COMPLETE    ");
+                        // lcd.setCursor(0,1);
+                        lcd.print("     CLOSE      ");
                         lcd.setCursor(0,1);
-                        lcd.print("CLOSE WATER TAP    ");
+                        lcd.print("   WATER TAP    ");
                         
+                    }
+
+                    if(Secodaryfill_error_flag)
+                    {
+                        digitalWrite(BUZZER,HIGH);
+                        digitalWrite(YELLOW_LED,HIGH);
+                        lcd.setCursor(0,0);
+                        lcd.print("SECONDARY BOILER ");
+                        lcd.setCursor(0,1);
+                        lcd.print("NOT FILLED       ");
                     }
 
                     if(flow_error_checkflag)      // If error due to flow issue
@@ -474,7 +660,7 @@ void lcdclass::lcd_display()
                         digitalWrite(BUZZER,HIGH);
                         digitalWrite(YELLOW_LED,HIGH);
                         lcd.setCursor(0,0);
-                        lcd.print("  CHECK WATER");
+                        lcd.print("  CHECK WATER ");
                         lcd.setCursor(0,1);
                         lcd.print("  LEVEL SENSOR");
                     }
@@ -503,6 +689,7 @@ void lcdclass::lcd_display()
             }
             else
             {
+    
                 lcd.clear();
                 pauseflag=0;
                 // primary_filling_flag=0;
@@ -537,7 +724,7 @@ void lcdclass::lcd_display()
                 digitalWrite(BUZZER,LOW);
             }
 
-            if( !closetap  && (process_flag || secondarytimerflag || preheat_flag))           // If error is not due to zero calibration or solenoid issue and process is running or secondary timer is running → check for errors continuously
+            if( !Secodaryfill_error_flag && !closetap  && (process_flag || secondarytimerflag || preheat_flag))           // If error is not due to zero calibration or solenoid issue and process is running or secondary timer is running → check for errors continuously
             {
             process_object.error_check();
             }

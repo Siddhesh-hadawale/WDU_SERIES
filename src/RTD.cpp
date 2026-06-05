@@ -2,7 +2,7 @@
 #include "Ext_var.h"
 
 #define PROBE_OK_STABLE_COUNT 10    // Samples required to clear error
-#define PROBE_ERROR_TEMP      255.0
+// #define PROBE_ERROR_TEMP      255.0
 #define PT100_PIN 27
 
 // -------------------- RTD Constants --------------------
@@ -60,9 +60,11 @@ void PT100::read_temperature()
 
         Heater_temp = ((Rt / R0) - 1) / Alpha;
         calib_Heater1 = Heater_temp + temp_error;
-        // Serial3.print("Heater Temp: ");
-        // Serial3.println(calib_Heater1);
-        
+        if(process_flag )
+        {
+        Serial3.print("Heater Temp: ");
+        Serial3.println(calib_Heater1);
+        }
         // PT100_object.PT100_error_check();
 
         // // =====================================================

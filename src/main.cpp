@@ -1,6 +1,7 @@
 #include <Arduino.h>
 // #include "Lcd_Display.h"
 #include "Ext_Var.h"
+#include <avr/wdt.h>
 
 #define SOLENOID1 13   // Solenoid valve 1 pin(Water inlet and primary comdenser)
 #define SOLENOID2 12   // Solenoid valve 2 pin(Secondary condenser)
@@ -16,8 +17,21 @@ bool pauseflag=0;              // Pauses process timer
 # define PERIOD_EXAMPLE_VALUE (0x00C2)   // Timer period value
 
 
+void protected_write_io(volatile uint8_t &reg, uint8_t value) {            // Watchdog timer safe register write function
+  CCP = CCP_IOREG_gc;
+  reg = value;
+}
+
 /*================ System Initialization ================*/
 void setup() {
+
+
+  // Clear all reset flags
+  RSTCTRL.RSTFR = RSTCTRL_WDRF_bm; // Clear watchdog reset flag only
+
+  // Configure watchdog timer: ~8192/1024 = 8s timeout (8192 cycles)
+  protected_write_io(WDT.CTRLA, WDT_PERIOD_8KCLK_gc);
+
 
   lcd_object.lcd_setup(); 
 
@@ -41,8 +55,10 @@ void setup() {
   // delay(300);
 
   eeprom_object.eeprom_dataread();    // Read saved EEPROM settings
+  delay(10);
+  variant=((prodtype[prodtypecounter])/10);
 
-  Max_liter = (2 * OPERATING_TIME) * (variant / 10.0);
+  Max_liter=(optime[optimecounter])*(variant/10.0);
 
   cli();                              // Disable interrupts during timer setup
 
@@ -74,7 +90,8 @@ ISR(TCA0_OVF_vect)
     if (time_counter >= 80)           // Check if ~1 second elapsed
     {
       one_second_counter++;           // Increment process seconds
-      Serial3.println(one_second_counter); // Debug print
+      
+      //Serial3.println(one_second_counter); // Debug print
       // Serial3.println(pauseflag);
       time_counter=0;                 // Reset process counter
     }
@@ -86,6 +103,7 @@ ISR(TCA0_OVF_vect)
 
 /*================ Main Execution Loop ================*/
 void loop() {
+  __builtin_avr_wdr();              // Watchdog timer reset to prevent system reset
 
   lcd_object.lcd_display();           // Update LCD screen
   buttonClass_object.button_ticks();  // Process button events
@@ -95,5 +113,6 @@ void loop() {
   process_object.ticker_update();     // Update process-related timers
   PT100_object.read_temperature();    // Read temperature from sensor
   // Serial3.println("1");
+  
 
 }

@@ -14,6 +14,7 @@
     void eeprom_product_selection();
     void eeprom_subproduct_selection();
     void eeprom_calibration_value();
+    void eeprom_operating_time();
     void eeprom_safety_temperature();
     void eeprom_probe_error();
 

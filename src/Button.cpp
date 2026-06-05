@@ -55,6 +55,9 @@ bool time_skip = 0;             // Used to skip time during secondary process
 
 // ---------------- FACTORY RESET ----------------
 bool factoryresetflag = 1;      // Confirmation flag for factory reset
+bool testsettings=0;
+bool intestmenu=0;
+bool override_alert_flag=0;        // Flag to indicate alert condition due to override settings
 
 // ---------------- COUNTERS ----------------
 uint8_t skip_count = 0;         // Counter used for time skip logic
@@ -107,7 +110,7 @@ void buttonClass::button_setup()
 
     // BACK button
     back_button.attachClick(back_screen);             // Short press → Go back one screen
-    back_button.setPressMs(1000);                     // Long press threshold (1 second)
+    back_button.setPressTicks(1000);                     // Long press threshold (1 second)
     back_button.attachDuringLongPress(back_to_home);  // Long press → Return to main screen
 
     // Note:
@@ -194,42 +197,82 @@ void buttonClass::back_to_home()
     // Execute only if NOT already on main screen AND tap is not closed
     if (!mainscreenflag && !closetap)
     {
-        lcd.clear();  // Clear display
+        digitalWrite(BUZZER, HIGH);
+        if(!usersettings && !servicemenu && !inmenu && !intestmenu && !testsettings)
+        {
+            lcd.clear();  // Clear display
+            lcd.setCursor(0,0);
+            lcd.print("    PROCESS ");
+            lcd.setCursor(0,1);
+            lcd.print("   TERMINATED");
+            delay(2000); // Short delay to allow message to be read
+            buzzerclass_object.Buzzer_beep(100);
+            buzzerclass_object.Buzzer_start();
+        }
+        else
+        {
+            buzzerclass_object.Buzzer_beep(1000);
+            buzzerclass_object.Buzzer_start();
+        }
+        
 
         // -------- USER FEEDBACK (BUZZER) --------
-        digitalWrite(BUZZER, HIGH);
-        buzzerclass_object.Buzzer_beep(1000);
-        buzzerclass_object.Buzzer_start();
+        
+        // delay(1000); // Short delay to allow message to be read
+        
 
         // -------- RESET SYSTEM STATES --------
         mainscreenflag = 1;      // Return to main screen
-        process_flag = 0;        // Stop process execution
+        flow_error_checkflag = 0;
+        
         temp_drop_flag = 0;      // Reset temperature drop logic
         inmenu = 0;              // Exit any submenu
-        secondarytimerflag = 0;  // Stop secondary timer
+        
         heater_start = 0;        // Reset heater start flag
+       
+        intestmenu=0;          // Exit test menu if active
+        testsettings=0;          // Reset test settings flag
+
+        waterlevel_error_flag=0;
+        flow_error_checkflag=0;
+        primary_filling_flag=0;
+        // probeoverride=0;
+        
+        pauseflag=1;
+        //probeerrorflag=0;
+
+
+        secondaryyes=0;
+        Probe1_Err=0;
+
+        
+
+        process_flag = 0;        // Stop process execution
         preheat_flag = 0;        // Reset preheat flag
+        secondarytimerflag = 0;  // Stop secondary timer
+        error_check_flag=0;
+        time_skip=0;            // Reset time skip logic
+
+        
 
         // -------- STOP HARDWARE OPERATIONS --------
-        process_object.heater1_stop();
+        process_object.Contactor1_stop();
+        // process_object.heater1_stop();
         // process_object.heater1_stop();     // Stop heater
         // buzzerclass_object.heater_stop();  // Stop buzzer-related heater logic
 
         digitalWrite(SOLENOID1, LOW);  // Close solenoid 1
         digitalWrite(SOLENOID2, LOW);  // Close solenoid 2
+        digitalWrite(POWER_DETECTION, LOW);  // Sensor OFF
 
+        
         // -------- RESTORE SETTINGS FROM EEPROM --------
         eeprom_object.eeprom_dataread();
 
         // Default screen → Main Screen
         screen = MainScreen;
 
-        waterlevel_error_flag=0;
-        flow_error_checkflag=0;
-        primary_filling_flag=0;
-        error_check_flag=0;
-        pauseflag=0;
-        //probeerrorflag=0;
+        
 
         // -------- ERROR HANDLING LOGIC --------
         // If solenoid override is OFF and not in settings/menu,
@@ -252,6 +295,7 @@ void buttonClass::back_to_home()
             servicemenu = 0;
             screen = MainScreen;
         }
+        lcd.clear();
     }
 }
 
@@ -268,7 +312,7 @@ void buttonClass::long_press_up()
         if (mainscreenflag)
         {
             // Calculate maximum allowed volume
-            Max_liter = (2 * OPERATING_TIME) * (variant / 10.0);
+            Max_liter=(optime[optimecounter])*(variant/10.0);
 
             if (counter < Max_liter)
             {
@@ -312,6 +356,21 @@ void buttonClass::long_press_up()
                 if (longpress_count == 5)
                 {
                     Heatersafteytemp += SAFETY_TEMP_STEP;
+                    longpress_count = 0;
+                }
+            }
+        }
+
+        if (screen == TimeFactorSettings)
+        {
+            if (sfill_time < SECONDARY_FILL_TIME_LIMIT)
+            {
+                longpress_count++;
+
+                // Controlled increment (every 5 cycles)
+                if (longpress_count == 5)
+                {
+                    sfill_time += 1;
                     longpress_count = 0;
                 }
             }
@@ -392,6 +451,20 @@ void buttonClass::long_press_down()
             }
         }
 
+        if (screen == TimeFactorSettings)
+        {
+            if (sfill_time >  SECONDARY_FILL_TIME_LIMIT_LOWER)
+            {
+                longpress_count++;
+
+                if (longpress_count == 5)
+                {
+                    sfill_time -= 1;
+                    longpress_count = 0;
+                }
+            }
+        }
+
         // -------- PROBE CALIBRATION SETTINGS --------
         if (screen == ProbeCalibrationSettings)
         {
@@ -415,10 +488,79 @@ void buttonClass::increment()
 
     if(mainscreenflag)
     {
-        Max_liter=(2*OPERATING_TIME)*(variant/10.0);    // Calculate max allowed liters
+        Max_liter=(optime[optimecounter])*(variant/10.0);    // Calculate max allowed liters
+        
         if(counter<Max_liter)
         {
         counter+=0.5;   // Increase volume in steps of 0.5
+        }
+        return;
+    }
+
+    if(testsettings)
+    {
+        switch(screen2)
+        {
+            case TestMenu1:
+                if(uppointer)
+                {
+                    if(dduflag)
+                    {
+                        screen2=TestMenu2;
+                        buttonClass_object.setPointer(0,1);
+                        uppointer=0;
+                        downpointer=1;
+
+                    }
+                    else
+                    {
+                        screen2=TestMenu1;
+                        buttonClass_object.setPointer(0,1);
+                        uppointer=0;
+                        downpointer=1;
+                    }
+                    
+
+                }
+                else
+                {
+                    buttonClass_object.setPointer(0,0);
+                    uppointer=1;
+                    downpointer=0;
+                }
+            break;
+
+            case TestMenu2:
+                if(uppointer)
+                {
+                    screen2=TestMenu1;
+                    buttonClass_object.setPointer(0,0);
+                    uppointer=1;
+                    downpointer=0;
+                }
+                else
+                {
+                    buttonClass_object.setPointer(0,0);
+                    uppointer=1;
+                    downpointer=0;
+                }
+            break;
+
+            // case TestMenu3:
+            //     if(uppointer)
+            //     {
+            //         screen2=TestMenu2;
+            //         buttonClass_object.setPointer(0,1);
+            //         uppointer=0;
+            //         downpointer=1;
+            //     }
+            //     else
+            //     {
+            //         buttonClass_object.setPointer(0,0);
+            //         uppointer=1;
+            //         downpointer=0;
+            //     }
+            // break;
         }
         return;
     }
@@ -599,7 +741,7 @@ void buttonClass::increment()
             {
                 if(uppointer)
                 {
-                    screen=ServiceMenuScreen5;
+                    screen=ServiceMenuScreen7;
                     buttonClass_object.setPointer(0,1);
                      uppointer=0;
                     downpointer=1;
@@ -615,7 +757,7 @@ void buttonClass::increment()
             {
                 if(uppointer)
                 {
-                    screen=SDUServiceMenuScreen3;
+                    screen=SDUServiceMenuScreen4;
                     buttonClass_object.setPointer(0,1);
                      uppointer=0;
                     downpointer=1;
@@ -694,10 +836,42 @@ void buttonClass::increment()
             }
         break;
 
-        case SDUServiceMenuScreen3:                                // Calibration & Product Type (SDU)
+        case ServiceMenuScreen6:                                  // Probe Calibration & Product Type
           if(uppointer)
             {
-                screen=ServiceMenuScreen2;
+                screen=ServiceMenuScreen5;
+                buttonClass_object.setPointer(0,0);
+                uppointer=1;
+                downpointer=0;
+            }
+            else
+            {
+                buttonClass_object.setPointer(0,0);
+                uppointer=1;
+                downpointer=0;
+            }
+        break;
+
+        case ServiceMenuScreen7:                                  // Probe Calibration & Product Type
+          if(uppointer)
+            {
+                screen=ServiceMenuScreen6;
+                buttonClass_object.setPointer(0,0);
+                uppointer=1;
+                downpointer=0;
+            }
+            else
+            {
+                buttonClass_object.setPointer(0,0);
+                uppointer=1;
+                downpointer=0;
+            }
+        break;
+
+        case SDUServiceMenuScreen4:                                // Calibration & Product Type (SDU)
+          if(uppointer)
+            {
+                screen=ServiceMenuScreen3;
                 buttonClass_object.setPointer(0,0);
                 uppointer=1;
                 downpointer=0;
@@ -745,6 +919,18 @@ void buttonClass::increment()
             }
         break;
 
+        case OperatingTimeSettings:
+            if(optimecounter<2)
+            {
+                optimecounter++;    
+            }
+            else
+            {
+                optimecounter=0;
+            }
+
+        break;
+
         case SafteyTemperatureSettings:                                // Heater safety temperature adjustment
             if(Heatersafteytemp<MAX_SAFETY_TEMP)
             {
@@ -760,15 +946,27 @@ void buttonClass::increment()
 
         break;
 
+        case TimeFactorSettings:
+            if(sfill_time<= SECONDARY_FILL_TIME_LIMIT)
+            {
+                sfill_time+=1;
+            }
+            
+        break;
+
         case FactoryResetScreen:                                         // Factory reset confirmation toggle
             if(!factoryresetflag)
             {
+                lcd.clear();
                 buttonClass_object.setPointer(0,1);
+                lcd.print("RESET PARAMETERS     ");
                 factoryresetflag=1;
             }
             else
             {
-                buttonClass_object.setPointer(11,1);
+                lcd.clear();
+                buttonClass_object.setPointer(0,1);
+                lcd.print("SENSORS TESTING   ");
                 factoryresetflag=0;
             }
         break;  
@@ -793,6 +991,75 @@ void buttonClass::decrement()
         return;                     // Exit after handling main screen logic
     }
 
+    if(testsettings)
+    {
+        switch(screen2)
+        {
+            case TestMenu1:
+                if(downpointer)
+                {
+                    if(dduflag)
+                    {
+                        
+                        screen2=TestMenu2;
+                        buttonClass_object.setPointer(0,1);
+                        uppointer=0;
+                        downpointer=1;
+                    }
+                    else if(dduflag==0)
+                    {
+                        
+                        screen2=TestMenu1;
+                        buttonClass_object.setPointer(0,0);
+                        uppointer=1;
+                        downpointer=0;
+                    }
+
+                }
+                else
+                {
+                    buttonClass_object.setPointer(0,1);
+                    uppointer=0;
+                    downpointer=1;
+                }
+            break;
+
+            case TestMenu2:
+                if(downpointer)
+                {
+                    screen2=TestMenu1;
+                    buttonClass_object.setPointer(0,0);
+                     uppointer=1;
+                    downpointer=0;
+
+                }
+                else
+                {
+                    buttonClass_object.setPointer(0,1);
+                    uppointer=0;
+                    downpointer=1;
+                }
+            break;
+
+            // case TestMenu3:
+            //     if(uppointer)
+            //     {
+            //         screen2=TestMenu2;
+            //         buttonClass_object.setPointer(0,1);
+            //          uppointer=0;
+            //         downpointer=1;
+
+            //     }
+            //     else
+            //     {
+            //         buttonClass_object.setPointer(0,0);
+            //         uppointer=1;
+            //         downpointer=0;
+            //     }
+            // break;   
+        }
+        return;
+    }
     // **************** USER SETTINGS *******************
     // Handles navigation and parameter changes inside user settings menu
     if(usersettings)
@@ -996,13 +1263,34 @@ void buttonClass::decrement()
         }
     break;
 
+
+
     // -------- SERVICE MENU SCREEN 2 --------
+
     case ServiceMenuScreen2:
+        if(downpointer)   // If pointer already on lower option
+        {
+            screen = ServiceMenuScreen3;          // Move to next screen
+            buttonClass_object.setPointer(0,1);   // Set pointer to lower position
+            downpointer = 1;
+            uppointer = 0;   
+        }
+        else              // If pointer on upper option
+        {
+            buttonClass_object.setPointer(0,1);   // Move pointer down
+            downpointer = 1;
+            uppointer = 0;
+        }
+    break;
+
+    // -------- SERVICE MENU SCREEN 3 --------
+
+    case ServiceMenuScreen3:
         if(dduflag)   // If DDU variant is selected
         {
             if(downpointer)
             {
-                screen = ServiceMenuScreen3;      // Move to next screen
+                screen = ServiceMenuScreen4;      // Move to next screen
                 buttonClass_object.setPointer(0,1);
                 downpointer = 1;
                 uppointer = 0;   
@@ -1018,7 +1306,7 @@ void buttonClass::decrement()
         {
             if(downpointer)
             {
-                screen = SDUServiceMenuScreen3;   // Move to SDU-specific screen
+                screen = SDUServiceMenuScreen4;   // Move to SDU-specific screen
                 buttonClass_object.setPointer(0,1);
                 downpointer = 1;
                 uppointer = 0;   
@@ -1032,22 +1320,22 @@ void buttonClass::decrement()
         }
     break;
 
-    // -------- SERVICE MENU SCREEN 3 --------
-    case ServiceMenuScreen3:
-        if(downpointer)
-        {
-            screen = ServiceMenuScreen4;          // Move to next screen
-            buttonClass_object.setPointer(0,1);
-            downpointer = 1;
-            uppointer = 0;   
-        }
-        else
-        {
-            buttonClass_object.setPointer(0,1);   // Move pointer down
-            downpointer = 1;
-            uppointer = 0;
-        }
-    break;
+    
+    // case ServiceMenuScreen3:
+    //     if(downpointer)
+    //     {
+    //         screen = ServiceMenuScreen4;          // Move to next screen
+    //         buttonClass_object.setPointer(0,1);
+    //         downpointer = 1;
+    //         uppointer = 0;   
+    //     }
+    //     else
+    //     {
+    //         buttonClass_object.setPointer(0,1);   // Move pointer down
+    //         downpointer = 1;
+    //         uppointer = 0;
+    //     }
+    // break;
 
     // -------- SERVICE MENU SCREEN 4 --------
     case ServiceMenuScreen4:
@@ -1070,6 +1358,38 @@ void buttonClass::decrement()
     case ServiceMenuScreen5:
         if(downpointer)
         {
+            screen = ServiceMenuScreen6;          // Wrap back to first screen
+            buttonClass_object.setPointer(0,1);   // Move pointer to top
+            downpointer = 1;
+            uppointer = 0;   
+        }
+        else
+        {
+            buttonClass_object.setPointer(0,1);   // Move pointer down
+            downpointer = 1;
+            uppointer = 0;
+        }
+    break;
+
+    case ServiceMenuScreen6:
+        if(downpointer)
+        {
+            screen = ServiceMenuScreen7;          // Wrap back to first screen
+            buttonClass_object.setPointer(0,0);   // Move pointer to top
+            downpointer = 0;
+            uppointer = 1;   
+        }
+        else
+        {
+            buttonClass_object.setPointer(0,1);   // Move pointer down
+            downpointer = 1;
+            uppointer = 0;
+        }
+    break;
+
+    case ServiceMenuScreen7:
+        if(downpointer)
+        {
             screen = ServiceMenuScreen1;          // Wrap back to first screen
             buttonClass_object.setPointer(0,0);   // Move pointer to top
             downpointer = 0;
@@ -1084,7 +1404,7 @@ void buttonClass::decrement()
     break;
 
     // -------- SDU SERVICE MENU SCREEN 3 --------
-    case SDUServiceMenuScreen3:
+    case SDUServiceMenuScreen4:
         if(downpointer)
         {
             screen = ServiceMenuScreen1;          // Return to main service screen
@@ -1140,6 +1460,20 @@ void buttonClass::decrement()
             calibration_value = 0.0;   // Clamp to zero (no negative values)
     break;
 
+
+    case OperatingTimeSettings:
+            if(optimecounter>0)
+            {
+                optimecounter--;    
+            }
+            else
+            {
+                optimecounter=2;
+            }
+
+        break;
+
+
     // -------- SAFETY TEMPERATURE SETTINGS --------
     case SafteyTemperatureSettings:
         if(Heatersafteytemp > MIN_SAFETY_TEMP)
@@ -1156,19 +1490,30 @@ void buttonClass::decrement()
         }
     break;
 
-    // -------- FACTORY RESET CONFIRMATION --------
-    case FactoryResetScreen:
-        if(!factoryresetflag)   // If currently NO
-        {
-            buttonClass_object.setPointer(0,1); // Move to YES
-            factoryresetflag = 1;               // Enable reset selection
-        }
-        else                   // If currently YES
-        {
-            buttonClass_object.setPointer(11,1); // Move to NO
-            factoryresetflag = 0;                // Disable reset selection
-        }
+    case TimeFactorSettings:
+            if(sfill_time > SECONDARY_FILL_TIME_LIMIT_LOWER)
+            {
+                sfill_time-=1;
+            }
     break;
+
+    // -------- FACTORY RESET CONFIRMATION --------
+     case FactoryResetScreen:                                         // Factory reset confirmation toggle
+            if(!factoryresetflag)
+            {
+                lcd.clear();
+                buttonClass_object.setPointer(0,1);
+                lcd.print("RESET PARAMETERS     ");
+                factoryresetflag=1;
+            }
+            else
+            {
+                lcd.clear();
+                buttonClass_object.setPointer(0,1);
+                lcd.print("SENSORS TESTING   ");  
+                factoryresetflag=0;
+            }
+        break;  
 
     }
 
@@ -1184,7 +1529,7 @@ void buttonClass:: user_settings()
     // - No active process running
     // - Not inside service menu
     // - No secondary timer running
-    if(!usersettings && !process_flag  && !servicemenu && !secondarytimerflag)
+    if(!usersettings && !process_flag && !preheat_flag && !servicemenu && !secondarytimerflag && !intestmenu && !testsettings && !error_check_flag)
     {
       lcd.clear();
 
@@ -1221,19 +1566,21 @@ void buttonClass:: user_settings()
 
     // -------- SECONDARY TIMER SKIP FUNCTION --------
     // Allows user to skip remaining time during secondary process
-     if(secondarytimerflag && !time_skip)
+     if((secondarytimerflag || dryout_flag ) && !time_skip)
     {
         skip_count++;   // Increment skip counter on button press
 
         if (skip_count >= 50)   // Threshold reached for skip action
         {
+            digitalWrite(BUZZER, HIGH);
+            delay(100);
             one_second_counter = pre_end_time - 5; // Jump near end of timer
             skip_count = 0;                        // Reset counter
             time_skip = 1;                         // Mark skip completed
 
             // -------- USER FEEDBACK --------
-            digitalWrite(BUZZER, HIGH);
-            buzzerclass_object.Buzzer_beep(1000);
+            
+            buzzerclass_object.Buzzer_beep(2000);
             buzzerclass_object.Buzzer_start();
         }
         return;
@@ -1266,9 +1613,75 @@ void buttonClass:: back_screen()
         return;
     }
 
+    if(intestmenu)
+    {
+        intestmenu=0;
+        buttonClass_object.setPointer(0,0);
+        switch(screen2)
+        {
+            case FlowSensorTest:
+                digitalWrite(SOLENOID1, LOW); 
+                screen2=TestMenu1;
+                uppointer=1;
+                downpointer=0;
+            break;
+
+            case LevelSensorTest:
+                digitalWrite(SOLENOID1, LOW); 
+                digitalWrite(POWER_DETECTION, HIGH);  // Sensor OFF
+                delay(100);
+                if(dduflag)
+                {
+                    screen2=TestMenu2;
+                    buttonClass_object.setPointer(0,0);
+                    uppointer=1;
+                    downpointer=0;
+                }
+                else
+                {
+                    screen2=TestMenu1;
+                    buttonClass_object.setPointer(0,1);
+                    uppointer=0;
+                    downpointer=1;
+                }
+            break;
+
+            case PT100ProbeTest:
+                screen2=TestMenu2;
+                buttonClass_object.setPointer(0,1);
+                uppointer=0;
+                downpointer=1;
+            break;
+        }
+
+        return;
+
+    }
+
+
+    if(inmenu && testsettings && !intestmenu)
+    {
+      
+        if(dduflag)
+            {
+                screen = ServiceMenuScreen7;
+            }
+            else
+            {
+                screen = SDUServiceMenuScreen4;
+            }
+        // Reset pointer states
+        uppointer = 0;
+        downpointer = 1;
+        buttonClass_object.setPointer(0,1);
+        inmenu = 0;   // Exit submenu mode
+        testsettings=0;
+        return;
+    }
+
     // -------- BACK FROM SUBMENU --------
     // Handles exiting from parameter editing screens
-    if(inmenu)
+    if(inmenu && !testsettings)
     {
         // -------- RESET POINTER POSITION --------
         // lcd.clear();
@@ -1338,14 +1751,20 @@ void buttonClass:: back_screen()
             case CalibrationSettings:
                 EEPROM.get(CALIBRATION_VALUE, calibration_value);
                 servicemenu = 1;
+                screen = ServiceMenuScreen3;
+                
+            break;
 
+            case OperatingTimeSettings:
+                EEPROM.get(OPERATING_TIME, optimecounter);
+                servicemenu = 1;
                 if(dduflag)
                 {
-                    screen = ServiceMenuScreen3;
+                    screen = ServiceMenuScreen4;
                 }
                 else
                 {
-                    screen = SDUServiceMenuScreen3;
+                    screen = SDUServiceMenuScreen4;
                 }
             break;
 
@@ -1377,7 +1796,13 @@ void buttonClass:: back_screen()
                 servicemenu = 1;
 
                 // Recalculate maximum volume based on variant
-                Max_liter = (2 * OPERATING_TIME) * (variant / 10.0);
+                Max_liter=(optime[optimecounter])*(variant/10.0);
+            break;
+
+            case TimeFactorSettings:
+                EEPROM.get(SECONDARY_FILL_TIME, sfill_time);
+                screen = ServiceMenuScreen6;
+                servicemenu = 1;
             break;
 
             // -------- FACTORY RESET SCREEN --------
@@ -1389,11 +1814,11 @@ void buttonClass:: back_screen()
 
                 if(dduflag)
                 {
-                    screen = ServiceMenuScreen5;
+                    screen = ServiceMenuScreen6;
                 }
                 else
                 {
-                    screen = SDUServiceMenuScreen3;
+                    screen = SDUServiceMenuScreen4;
                 }
             break;
         }
@@ -1403,7 +1828,6 @@ void buttonClass:: back_screen()
 
 void buttonClass::enter_function()
 {
-
     // -------- ERROR HANDLING : CLOSE TAP --------
     // If error due to tap open → clear error and return
     if(error_check_flag && closetap)
@@ -1414,46 +1838,29 @@ void buttonClass::enter_function()
         return;
     }
 
-    // -------- ERROR HANDLING : ZERO CALIBRATION --------
-    // If calibration is zero → redirect to calibration settings
-    // if(error_check_flag && zero_calib)
-    // {
-    //     lcd.clear();
-       
-    //     error_check_flag=0;
-    //     zero_calib=0;
-
-    //     // Redirect to calibration menu
-    //     screen=CalibrationSettings;
-    //     servicemenu = 1;
-    //     inmenu=1;
-    //     digitalWrite(BUZZER,LOW);
-    //     return;
-    // }
+    if(error_check_flag && Secodaryfill_error_flag)
+    {
+        lcd.clear();
+        error_check_flag=0;
+        Secodaryfill_error_flag=0;
+        return;
+    }
 
     // -------- MAIN SCREEN : START PROCESS --------
     if(mainscreenflag && counter>0.0)
     {
-        // Check calibration before starting process
-        // if(calibration_value == 0.0)
-        // {
-        //     zero_calib=1;
-        //     mainscreenflag=0;
-        //     error_check_flag=1;
-        //     screen=ErrorScreen;                      // Show error screen
-        //     return;
-        // }
-
         // Apply variant-specific settings
+        one_second_counter=0;
+        one_second_counter2=0;
+
         process_object.variant_settings();
         
         // Serial3.println("BUZZZZZZZZZZZER");
         digitalWrite(BUZZER,HIGH);
-        
+        // delay(1000);
         buzzerclass_object.Buzzer_beep(1000);
         buzzerclass_object.Buzzer_start();
-
-        one_second_counter2=0;
+        
 
         // -------- SECONDARY FILL FLOW --------
         if(secondaryyes && dduflag)
@@ -1470,14 +1877,15 @@ void buttonClass::enter_function()
         else
         {
             // -------- DIRECT PROCESS START --------
-            if(dduflag)
-            {   
+            // if(dduflag)
+            // {   
                 preheat_flag=1;
-            }
-            else
-            {
-                process_flag=1;
-            }
+            // }
+            // else
+            // {
+                // Serial3.println("sdu");
+                // process_flag=1;
+            // }
             
             screen=ProcessScreen;
             // process_flag=1;
@@ -1496,9 +1904,103 @@ void buttonClass::enter_function()
         }
         return;
     }
+    if(intestmenu)
+    {
+        intestmenu=0;
+        buttonClass_object.setPointer(0,0);
+        switch(screen2)
+        {
+            case FlowSensorTest:
+                digitalWrite(SOLENOID1, LOW);
+                screen2=TestMenu1;
+                uppointer=1;
+                downpointer=0;
+            break;
+
+            case LevelSensorTest:
+                    digitalWrite(POWER_DETECTION, HIGH);  // Sensor OFF
+                    digitalWrite(SOLENOID1, LOW);
+                    if(dduflag)
+                    {
+                        screen2=TestMenu2;
+                        buttonClass_object.setPointer(0,0);
+                        uppointer=1;
+                        downpointer=0;
+                    }
+                    else
+                    {
+                        screen2=TestMenu1;
+                        buttonClass_object.setPointer(0,1);
+                        uppointer=0;
+                        downpointer=1;
+                    }
+            break;
+
+            case PT100ProbeTest:
+                screen2=TestMenu2;
+                buttonClass_object.setPointer(0,1);
+                uppointer=0;
+                downpointer=1;
+            break;
+        }
+
+        return;
+
+    }
+
+    if((inmenu && testsettings && !intestmenu))
+    {
+       
+        switch(screen2)
+        {
+            case TestMenu1:
+                if(downpointer)  
+                {
+                    digitalWrite(SOLENOID1, HIGH);
+                    screen2 = LevelSensorTest; // Enter level sensor test
+                    lcd.clear();
+                    intestmenu = 1;
+                    digitalWrite(POWER_DETECTION, LOW);  // Sensor ON
+                    delay(100);
+                    
+                }
+                else
+                {
+                    digitalWrite(SOLENOID1, HIGH);             
+                    lcd.clear();
+                    screen2= FlowSensorTest; 
+                    intestmenu = 1;
+                }
+            break;
+
+            case TestMenu2:
+                if(downpointer)
+                {
+                    screen2 = PT100ProbeTest; // Enter flow sensor test
+                    lcd.clear();
+                    intestmenu = 1;
+                }
+                else
+                {
+                    digitalWrite(SOLENOID1, HIGH);
+                    screen2 = LevelSensorTest; 
+                    lcd.clear();
+                    intestmenu = 1;
+                    digitalWrite(POWER_DETECTION, LOW);  // Sensor ON
+                    delay(100);
+                    
+                }
+            break;
+
+           
+        }
+        return;
+
+    }
+
 
     // -------- MENU CONFIRM ACTION (ENTER IN SUBMENU) --------
-        if(inmenu)
+        if(inmenu  && !testsettings)
         {
         uppointer=1;
         downpointer=0;
@@ -1565,16 +2067,22 @@ void buttonClass::enter_function()
             case CalibrationSettings:
                 EEPROM.put(CALIBRATION_VALUE, calibration_value);
                 servicemenu=1;
+                screen=ServiceMenuScreen3;
+                
+            break;
+
+            case OperatingTimeSettings:
+                EEPROM.put(OPERATING_TIME, optimecounter);
+                servicemenu=1;
+                counter = 0.00;
                 if(dduflag)
                 {
-                    screen=ServiceMenuScreen3;
+                    screen=ServiceMenuScreen4;
                 }
                 else
                 {
-                    screen=SDUServiceMenuScreen3;
-                   
+                    screen=SDUServiceMenuScreen4;
                 }
-                
             break;
             
             // -------- SAVE SECONDARY FILL --------
@@ -1609,8 +2117,18 @@ void buttonClass::enter_function()
                 delay(50);
                 EEPROM.put(CALIBRATION_VALUE, calibration_value);
                 delay(50);
-                Max_liter = (2 * OPERATING_TIME) * (variant / 10.0);
+                Max_liter = (optime[optimecounter]) * (variant / 10.0);
+                counter = 0.00;
+                sfill_time = Sfill_default[prodtypecounter];
+                EEPROM.put(SECONDARY_FILL_TIME, sfill_time);
             break;
+
+            case TimeFactorSettings:
+                EEPROM.put(SECONDARY_FILL_TIME, sfill_time);
+                screen=ServiceMenuScreen6;
+                servicemenu=1;
+                
+             break;
             
             // -------- FACTORY RESET --------
             case FactoryResetScreen:
@@ -1636,22 +2154,13 @@ void buttonClass::enter_function()
                 }
                 else                                                 // If reset not confirmed
                 {
-                    uppointer=0;
-                    downpointer=1;
-                    servicemenu=1;
-                    if(dduflag)
-                    {
-                        buttonClass_object.setPointer(0,1);
-                        screen=ServiceMenuScreen5;
-
-                    }
-                    else
-                    {
-                        buttonClass_object.setPointer(0,1);
-                        screen=SDUServiceMenuScreen3;
-
-                    }
-                   
+                    uppointer=1;
+                    downpointer=0;
+                    // servicemenu=1;
+                    testsettings=1;
+                     inmenu=1;
+                    screen=TestingScreen;
+                    screen2=TestMenu1;
                 }
             break;
         }
@@ -1711,7 +2220,7 @@ void buttonClass::enter_function()
             if(downpointer)
             {
                 lcd.clear();
-                screen = SafteyTemperatureSettings; // Enter safety temp settings
+                screen = OperatingTimeSettings; // Enter operating time settings
                 inmenu = 1;
             }
             else
@@ -1722,8 +2231,23 @@ void buttonClass::enter_function()
             }
         break;
 
-        // -------- SERVICE MENU SCREEN 4 --------
         case ServiceMenuScreen4:
+            if(downpointer)
+            {
+                lcd.clear();
+                screen = SafteyTemperatureSettings; // Enter safety temperature settings
+                inmenu = 1;
+            }
+            else
+            {
+                lcd.clear();
+                screen = OperatingTimeSettings; // Enter operating time settings
+                inmenu = 1;
+            }
+        break;
+
+        // -------- SERVICE MENU SCREEN 4 --------
+        case ServiceMenuScreen5:
             if(downpointer)
             {
                 lcd.clear();
@@ -1739,14 +2263,17 @@ void buttonClass::enter_function()
         break;
 
         // -------- SERVICE MENU SCREEN 5 --------
-        case ServiceMenuScreen5:
+        case ServiceMenuScreen6:
             if(downpointer)
             {
                 factoryresetflag = 1;          // Default selection → YES
-                screen = FactoryResetScreen;  // Enter factory reset screen
+                screen = TimeFactorSettings;  // Enter factory reset screen
                 inmenu = 1;
 
-                buttonClass_object.setPointer(0,1); // Set pointer to confirmation
+                // buttonClass_object.setPointer(0,1); // Set pointer to confirmation
+                // lcd.clear();
+                // buttonClass_object.setPointer(0,1);
+                // lcd.print("RESET PARAMETER     ");
             }
             else
             {
@@ -1756,8 +2283,28 @@ void buttonClass::enter_function()
             }
         break;
 
+        case ServiceMenuScreen7:
+            if(downpointer)
+            {
+                factoryresetflag = 1;          // Default selection → YES
+                screen = FactoryResetScreen;  // Enter factory reset screen
+                inmenu = 1;
+
+                buttonClass_object.setPointer(0,1); // Set pointer to confirmation
+                // lcd.clear();
+                // buttonClass_object.setPointer(0,1);
+                lcd.print("RESET PARAMETER     ");
+            }
+            else
+            {
+                factoryresetflag = 1;          // Default selection → YES
+                screen = TimeFactorSettings;  // Enter factory reset screen
+                inmenu = 1;
+            }
+        break;
+
         // -------- SDU SERVICE MENU SCREEN 3 --------
-        case SDUServiceMenuScreen3:
+        case SDUServiceMenuScreen4:
             if(downpointer)
             {
                 screen = FactoryResetScreen; // Enter factory reset
@@ -1765,10 +2312,11 @@ void buttonClass::enter_function()
                 inmenu = 1;
 
                 buttonClass_object.setPointer(0,1); // Set pointer
+                lcd.print("RESET PARAMETER     ");
             }
             else
             {
-                screen = CalibrationSettings; // Enter calibration
+                screen = OperatingTimeSettings ; // Enter calibration
                 lcd.clear();
                 inmenu = 1;
             }

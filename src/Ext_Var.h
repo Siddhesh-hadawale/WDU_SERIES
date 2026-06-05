@@ -21,6 +21,8 @@
 #define SOLENOID1 13
 #define SOLENOID2 12
 
+// EEPROM Addresses
+
 #define PRODUCT_SELECTION 0
 #define SUBPRODUCT_SELECTION 1
 #define SAFETY_TEMP 3
@@ -32,13 +34,29 @@
 #define LEVEL_CONTROL 19
 #define SOLENOID_CONTROL 21
 #define PROBE_CONTROL 23
+#define SECONDARY_FILL_TIME 25
+#define OPERATING_TIME 27
+
+
+
 
 #define OPERATING_TIME 4   // Base operating time factor used for max volume calculation
+#define POWER_DETECTION 5
 
+#define PROBE_ERROR_TEMP      255.0
+
+#define MAX_SAFETY_TEMP 200          // Maximum allowed heater safety temperature
+#define MIN_SAFETY_TEMP 50           // Minimum allowed heater safety temperature
+#define SAFETY_TEMP_STEP 1           // Step increment/decrement for safety temperature
+#define PROBE_CALIBRATION_LIMIT 20   // Max +/- limit for probe calibration error
+#define SECONDARY_FILL_TIME_LIMIT  60 // Max limit for secondary fill time
+#define SECONDARY_FILL_TIME_LIMIT_LOWER  15
 
 extern int prodtype[3];
-extern int  optime[4];
+extern int  optime[3];
 extern float base_calibration[3];
+extern int Sfill_default[3];
+extern int sfill_time;
 
 
 
@@ -70,6 +88,11 @@ extern bool primary_filling_flag;
 // extern bool zero_calib;
 extern bool heater_start;
 extern bool preheat_flag;
+extern bool testsettings;
+extern bool Secodaryfill_error_flag;
+extern bool override_alert_flag;
+extern bool check_flag;
+extern bool dryout_flag;      
 
 extern float calib_Heater1;
 extern float temp_error;
@@ -79,6 +102,7 @@ extern int prodtypecounter;
 extern float calibration_value;
 extern float counter;
 extern int screen;
+extern int screen2;
 extern float Heater_temp;
 extern int variant;
 extern int pre_end_time;
@@ -107,7 +131,9 @@ enum menus
     ServiceMenuScreen3,
     ServiceMenuScreen4,
     ServiceMenuScreen5,
-    SDUServiceMenuScreen3,
+    ServiceMenuScreen6,
+    ServiceMenuScreen7,
+    SDUServiceMenuScreen4,
 
     UserSettingsScreen1,
     UserSettingsScreen2,
@@ -132,15 +158,29 @@ enum menus
     SecondaryFillSettings,
     SafteyTemperatureSettings,
     ProbeCalibrationSettings,
+    TimeFactorSettings,
 
     FactoryResetScreen,
 
     ProcessScreen,
     PrimaryFillScreen,
     SecondaryFillTimer,
+    SecondaryFillCheck,
+
+    TestingScreen,
     
     // SolenoidErrorScreen,
     ErrorScreen
+};
+
+enum test_menus
+{
+    TestMenu1,
+    TestMenu2,
+    FlowSensorTest,
+    LevelSensorTest,
+    PT100ProbeTest,
+    //TestMenu3,
 };
 
 #endif

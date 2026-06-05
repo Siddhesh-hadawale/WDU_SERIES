@@ -4,11 +4,19 @@
 #include <EEPROM.h>
 
 
+
+
 // #define PRODUCT_SELECTION 0
 // #define SUBPRODUCT_SELECTION 1
 // #define SAFETY_TEMP 3
 // #define CALIBRATION_VALUE 5
 // #define PROBE_ERROR 9
+
+// #define SECONDARY_FILL 15
+// #define FLOW_CONTROL 17
+// #define LEVEL_CONTROL 19
+// #define SOLENOID_CONTROL 21
+// #define PROBE_CONTROL 23
 
 //----------DEFINATIONS
 
@@ -24,15 +32,22 @@ void eepromclass::eeprom_defaultvalue()                 // Factory Reset Conditi
     calibration_value=1.4;    // Calibration value for 1.5L product, default product
     solenoidoverride=1;
     flowoverride=0;
+    leveloverride=0;
+    probeoverride=0;
     Heatersafteytemp=90;
-    // temp_error=0.0;
+    sfill_time=40;
+    optimecounter=0;
+
+    calib_Heater1=0.0;
+    temp_error=0.0;
+    delay(100);
     eeprom_object.eeprom_datawrite();
 
 }
 
 void eepromclass:: eeprom_update_sensor()
 {
-    EEPROM.update(SECONDARY_FILL, secondaryyes);
+    // EEPROM.update(SECONDARY_FILL, secondaryyes);
 
     EEPROM.update(FLOW_CONTROL, flowoverride);
 
@@ -54,7 +69,7 @@ void eepromclass:: eeprom_datawrite()
     EEPROM.put(SUBPRODUCT_SELECTION,prodtypecounter);
     
     EEPROM.put(CALIBRATION_VALUE, calibration_value);
-    
+
     EEPROM.put(SAFETY_TEMP, Heatersafteytemp);
  
     EEPROM.put(PROBE_ERROR, temp_error);
@@ -70,6 +85,10 @@ void eepromclass:: eeprom_datawrite()
     EEPROM.put(SOLENOID_CONTROL, solenoidoverride);
 
     EEPROM.put(PROBE_CONTROL, probeoverride);
+
+    EEPROM.put(SECONDARY_FILL_TIME, sfill_time);
+
+    EEPROM.put(OPERATING_TIME, optimecounter);
 
     
 
@@ -91,6 +110,11 @@ void eepromclass:: eeprom_calibration_value()
     EEPROM.put(CALIBRATION_VALUE, calibration_value);
 }
 
+void eepromclass:: eeprom_operating_time()
+{
+    EEPROM.put(OPERATING_TIME, optimecounter);
+}
+
 void eepromclass:: eeprom_safety_temperature()
 {
     EEPROM.put(SAFETY_TEMP, Heatersafteytemp);
@@ -107,6 +131,7 @@ void eepromclass :: eeprom_dataread()
     dduflag=EEPROM.read(PRODUCT_SELECTION);
     EEPROM.get(SUBPRODUCT_SELECTION,prodtypecounter);
     EEPROM.get(CALIBRATION_VALUE, calibration_value);
+    EEPROM.get(OPERATING_TIME, optimecounter);
     EEPROM.get(SAFETY_TEMP, Heatersafteytemp);
     EEPROM.get(PROBE_ERROR, temp_error);
 
@@ -119,6 +144,8 @@ void eepromclass :: eeprom_dataread()
     EEPROM.get(SOLENOID_CONTROL, solenoidoverride);
 
     EEPROM.get(PROBE_CONTROL, probeoverride);
+
+    EEPROM.get(SECONDARY_FILL_TIME, sfill_time);
 
     // Serial3.println(dduflag);
     // Serial3.println(calibration_value);
