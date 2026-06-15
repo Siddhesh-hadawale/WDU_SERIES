@@ -64,7 +64,7 @@ uint8_t skip_count = 0;         // Counter used for time skip logic
 uint8_t longpress_count = 0;    // Counter for smooth long press increment/decrement
 
 // ---------------- SAFETY PARAMETERS ----------------
-int Heatersafteytemp = 90;     // Current heater safety temperature setting
+int Heatersafteytemp = 75;     // Current heater safety temperature setting
 
 // ---------------- BUTTON PIN DEFINITIONS ----------------
 #define UP 35
@@ -330,8 +330,6 @@ void buttonClass::long_press_up()
         // -------- CALIBRATION SETTINGS --------
         if (screen == CalibrationSettings)
         {
-            // Max_liter = (2 * OPERATING_TIME) * (variant / 10.0);
-
             if (calibration_value < Max_liter +5)
             {
                 longpress_count++;
@@ -485,11 +483,10 @@ void buttonClass::long_press_down()
 void buttonClass::increment()
 {
     // -------- MAIN SCREEN: INCREASE OUTPUT VOLUME --------
-
     if(mainscreenflag)
     {
         Max_liter=(optime[optimecounter])*(variant/10.0);    // Calculate max allowed liters
-        
+
         if(counter<Max_liter)
         {
         counter+=0.5;   // Increase volume in steps of 0.5
@@ -912,7 +909,6 @@ void buttonClass::increment()
         break;
 
         case CalibrationSettings:                                     // Calibration value adjustment
-            // Max_liter=(2*OPERATING_TIME)*(variant/10.0);
             if(calibration_value<Max_liter+5.0)
             {
                 calibration_value+=0.1;
@@ -1756,7 +1752,9 @@ void buttonClass:: back_screen()
             break;
 
             case OperatingTimeSettings:
-                EEPROM.get(OPERATING_TIME, optimecounter);
+
+                EEPROM.get(EEPROM_OPERATING_TIME_ADDR, optimecounter);
+
                 servicemenu = 1;
                 if(dduflag)
                 {
@@ -1778,14 +1776,14 @@ void buttonClass:: back_screen()
             // -------- SAFETY TEMPERATURE SETTINGS --------
             case SafteyTemperatureSettings:
                 EEPROM.get(SAFETY_TEMP, Heatersafteytemp);
-                screen = ServiceMenuScreen4;
+                screen = ServiceMenuScreen5;
                 servicemenu = 1;
             break;
 
             // -------- PROBE CALIBRATION SETTINGS --------
             case ProbeCalibrationSettings:
                 EEPROM.get(PROBE_ERROR, temp_error);
-                screen = ServiceMenuScreen5;
+                screen = ServiceMenuScreen6;
                 servicemenu = 1;
             break;
 
@@ -1801,7 +1799,7 @@ void buttonClass:: back_screen()
 
             case TimeFactorSettings:
                 EEPROM.get(SECONDARY_FILL_TIME, sfill_time);
-                screen = ServiceMenuScreen6;
+                screen = ServiceMenuScreen7;
                 servicemenu = 1;
             break;
 
@@ -1814,7 +1812,7 @@ void buttonClass:: back_screen()
 
                 if(dduflag)
                 {
-                    screen = ServiceMenuScreen6;
+                    screen = ServiceMenuScreen7;
                 }
                 else
                 {
@@ -2072,7 +2070,8 @@ void buttonClass::enter_function()
             break;
 
             case OperatingTimeSettings:
-                EEPROM.put(OPERATING_TIME, optimecounter);
+                EEPROM.put(EEPROM_OPERATING_TIME_ADDR, optimecounter);
+                // Serial3.println("OperatingTimeSettings");
                 servicemenu=1;
                 counter = 0.00;
                 if(dduflag)
@@ -2096,14 +2095,14 @@ void buttonClass::enter_function()
             // -------- SAVE SAFETY TEMPERATURE --------
             case SafteyTemperatureSettings:
                 EEPROM.put(SAFETY_TEMP, Heatersafteytemp);
-                screen=ServiceMenuScreen4;
+                screen=ServiceMenuScreen5;
                 servicemenu=1;
             break;
             
             // -------- SAVE PROBE CALIBRATION --------
             case ProbeCalibrationSettings:
                 EEPROM.put(PROBE_ERROR, temp_error);
-                screen=ServiceMenuScreen5;
+                screen=ServiceMenuScreen6;
                 servicemenu=1;
             break;
             
@@ -2125,7 +2124,7 @@ void buttonClass::enter_function()
 
             case TimeFactorSettings:
                 EEPROM.put(SECONDARY_FILL_TIME, sfill_time);
-                screen=ServiceMenuScreen6;
+                screen=ServiceMenuScreen7;
                 servicemenu=1;
                 
              break;

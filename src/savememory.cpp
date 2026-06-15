@@ -34,15 +34,13 @@ void eepromclass::eeprom_defaultvalue()                 // Factory Reset Conditi
     flowoverride=0;
     leveloverride=0;
     probeoverride=0;
-    Heatersafteytemp=90;
+    Heatersafteytemp=75;
     sfill_time=40;
     optimecounter=0;
-
     calib_Heater1=0.0;
     temp_error=0.0;
     delay(100);
     eeprom_object.eeprom_datawrite();
-
 }
 
 void eepromclass:: eeprom_update_sensor()
@@ -74,8 +72,6 @@ void eepromclass:: eeprom_datawrite()
  
     EEPROM.put(PROBE_ERROR, temp_error);
 
-
-
     EEPROM.put(SECONDARY_FILL, secondaryyes);
 
     EEPROM.put(FLOW_CONTROL, flowoverride);
@@ -88,11 +84,7 @@ void eepromclass:: eeprom_datawrite()
 
     EEPROM.put(SECONDARY_FILL_TIME, sfill_time);
 
-    EEPROM.put(OPERATING_TIME, optimecounter);
-
-    
-
-
+    EEPROM.put(EEPROM_OPERATING_TIME_ADDR, optimecounter);
 }
 
 void eepromclass:: eeprom_product_selection()
@@ -112,7 +104,7 @@ void eepromclass:: eeprom_calibration_value()
 
 void eepromclass:: eeprom_operating_time()
 {
-    EEPROM.put(OPERATING_TIME, optimecounter);
+    EEPROM.put(EEPROM_OPERATING_TIME_ADDR, optimecounter);
 }
 
 void eepromclass:: eeprom_safety_temperature()
@@ -131,7 +123,7 @@ void eepromclass :: eeprom_dataread()
     dduflag=EEPROM.read(PRODUCT_SELECTION);
     EEPROM.get(SUBPRODUCT_SELECTION,prodtypecounter);
     EEPROM.get(CALIBRATION_VALUE, calibration_value);
-    EEPROM.get(OPERATING_TIME, optimecounter);
+    EEPROM.get(EEPROM_OPERATING_TIME_ADDR, optimecounter);
     EEPROM.get(SAFETY_TEMP, Heatersafteytemp);
     EEPROM.get(PROBE_ERROR, temp_error);
 

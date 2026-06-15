@@ -35,12 +35,14 @@
 #define SOLENOID_CONTROL 21
 #define PROBE_CONTROL 23
 #define SECONDARY_FILL_TIME 25
-#define OPERATING_TIME 27
+// #define OPERATING_TIME 27
+#define EEPROM_OPERATING_TIME_ADDR 27
 
 
 
 
-#define OPERATING_TIME 4   // Base operating time factor used for max volume calculation
+// #define OPERATING_TIME 4   // Base operating time factor used for max volume calculation
+#define OPERATING_TIME_FACTOR 4
 #define POWER_DETECTION 5
 
 #define PROBE_ERROR_TEMP      255.0
