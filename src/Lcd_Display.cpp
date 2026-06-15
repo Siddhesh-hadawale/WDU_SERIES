@@ -672,9 +672,7 @@ void lcdclass::lcd_display()
                         lcd.print("  PROBE  ERROR    ");
                         lcd.setCursor(0,1);
                         lcd.print("CHECK TEMP PROBE    ");
-                    }
-
-                    
+                    }                   
 
                 }
                 else
@@ -724,7 +722,8 @@ void lcdclass::lcd_display()
                 digitalWrite(BUZZER,LOW);
             }
 
-            if( !Secodaryfill_error_flag && !closetap  && (process_flag || secondarytimerflag || preheat_flag))           // If error is not due to zero calibration or solenoid issue and process is running or secondary timer is running → check for errors continuously
+            if( !error_check_flag && !Secodaryfill_error_flag && !closetap  && 
+                (process_flag || secondarytimerflag || preheat_flag))           // If error is not due to zero calibration or solenoid issue and process is running or secondary timer is running → check for errors continuously
             {
             process_object.error_check();
             }

@@ -2,7 +2,7 @@
 #include "Ext_Var.h"
 
 // ---------------- SAFETY LIMIT DEFINITIONS ----------------
-#define MAX_SAFETY_TEMP 200          // Maximum allowed heater safety temperature
+#define MAX_SAFETY_TEMP 150          // Maximum allowed heater safety temperature
 #define MIN_SAFETY_TEMP 50           // Minimum allowed heater safety temperature
 #define SAFETY_TEMP_STEP 1           // Step increment/decrement for safety temperature
 #define PROBE_CALIBRATION_LIMIT 20   // Max +/- limit for probe calibration error

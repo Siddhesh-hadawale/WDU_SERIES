@@ -294,6 +294,7 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
     {
         // error_check_flag=1;
         pauseflag=1;
+
         screen=ErrorScreen;
         if(!error_check_flag)
         {
@@ -327,6 +328,7 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
     {
         // error_check_flag=1;
         pauseflag=1;
+
         screen=ErrorScreen;
         if(!error_check_flag)
         {
@@ -359,6 +361,7 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
                     error_check_flag=1;
                     pauseflag=1;
                     temp_error_count=0;
+
                     screen=ErrorScreen;
                     if(!probeerrorflag)
                     {
@@ -685,10 +688,9 @@ void process:: process_start()                    // Process timing funcution
             flow_error_checkflag = 0;
             closetap=1;
             delay(100);
+
             screen=ErrorScreen;
-
             return;
-
         }      
     }
     } 
