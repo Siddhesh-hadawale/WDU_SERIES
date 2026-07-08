@@ -76,13 +76,13 @@ void Buzzer_on_off()
 
 void heater2_start()
 {
-    process_object.heater2_start();
+    // process_object.heater2_start();
     // heater.stop();
 }
 
 void heater_stop()
 {
-    process_object.heater2_stop();
+    // process_object.heater2_stop();
     // heaterstop.stop();
 }
 

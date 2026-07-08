@@ -60,11 +60,11 @@ void PT100::read_temperature()
 
         Heater_temp = ((Rt / R0) - 1) / Alpha;
         calib_Heater1 = Heater_temp + temp_error;
-        if(process_flag )
-        {
-        // Serial3.print("Heater Temp: ");
-        // Serial3.println(calib_Heater1);
-        }
+        // if(process_flag )
+        // {
+        Serial3.print("Heater Temp: ");
+        Serial3.println(calib_Heater1);
+        // }
         // PT100_object.PT100_error_check();
 
         // // =====================================================

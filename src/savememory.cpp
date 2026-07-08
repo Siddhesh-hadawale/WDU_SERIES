@@ -35,7 +35,7 @@ void eepromclass::eeprom_defaultvalue()                 // Factory Reset Conditi
     flowoverride=0;
     leveloverride=0;
     probeoverride=0;
-    Heatersafteytemp=75;
+    Heatersafteytemp=80;
     // sfill_time=40;
     optimecounter=0;
     calib_Heater1=0.0;

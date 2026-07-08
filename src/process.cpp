@@ -59,9 +59,9 @@ bool heater_start=false;   // Counter for consecutive temperature error readings
 
 #define PREHEAT_TIME 240         // Time in seconds for preheating the boiler before starting the main process
 // #define PREHEAT_TIME 10
-#define SECONDARY_CHECK_TIME 120   // Secondary boiler filling check time in seconds
-// #define OVERRIDE_ALERT_INTERVAL 600  // Time in seconds after which override alert should be triggered during the process if override settings are enabled
-#define OVERRIDE_ALERT_INTERVAL 30
+#define SECONDARY_CHECK_TIME 300   // Secondary boiler filling check time in seconds
+#define OVERRIDE_ALERT_INTERVAL 600  // Time in seconds after which override alert should be triggered during the process if override settings are enabled
+// #define OVERRIDE_ALERT_INTERVAL 30
 
 // void heat1_start();
 void contact2_start();
@@ -169,7 +169,7 @@ void process:: variant_settings()      // Calculations for Process time and Seco
         case 150:                        // For 1.5 Liters
             // pre_end_time = 15;
             // pre_end_time = 10*240;  //40 minutes (to pre-heat/fill the secondary boiler before starting normal operation.)
-            sfill_collection = 1.3;     // in liters
+            sfill_collection = 1.2;     // in liters
             after_dryout_fill= 0.8;            // in liters
 
 
@@ -198,7 +198,7 @@ void process:: variant_settings()      // Calculations for Process time and Seco
         case 400:                          // FOr 4.0 Liters
         //  pre_end_time = 40;
         // pre_end_time = 13*90;   //19.5 minutes
-        sfill_collection = 1.6;     // in liters
+        sfill_collection = 1.4;     // in liters
         after_dryout_fill= 1.1;            // in liters
 
 
@@ -365,9 +365,10 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
                         probeerrorflag=1;
                         // heater_start=0;
                         // process_object.heater1_stop();
-                        process_object.Contactor1_stop();
+                        // process_object.Contactor1_stop();
                         // buzzerclass_object.heater_stop();
-                       lcd_object.lcd_buzzer_toggle_start();
+                    //    lcd_object.lcd_buzzer_toggle_start();
+                       process_object.Contactor1_stop();
                     }
                     return;
                 }
@@ -409,7 +410,8 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
                         temp_error_count=0; 
                         // process_object.Contactor1_start();
                         // heater_start=0;
-                        process_object.heater2_stop();
+                        process_object.Contactor2_stop();
+                        // process_object.heater2_stop();
                         // process_object.heater1_start();
                         // buzzerclass_object.heater_stop();
                     }
@@ -444,6 +446,7 @@ void process::water_level_detection()       // Water level Detection Fuction, It
             // process_flag=0;
             heater_start=0;
             process_object.Contactor1_stop();
+            
         }
 
         else if(digitalRead(WATER_LEVEL_SENSOR) == LOW && primary_filling_flag)
@@ -545,8 +548,8 @@ void process:: dryout_fill()                                                    
                 delay(1000);
                 buzzerclass_object.Buzzer_beep(1000);
                 buzzerclass_object.Buzzer_start();
-                if(temp_drop_flag)                          //  If  fuction is called between the process because of secondary boiler empty
-            {
+                // if(temp_drop_flag)                          //  If  fuction is called between the process because of secondary boiler empty
+                // {
                 process_flag=1;
                 temp_drop_flag=0;
                 screen=ProcessScreen;
@@ -556,7 +559,7 @@ void process:: dryout_fill()                                                    
                 previous_time = one_second_counter;
                 lcd.clear();
                 
-            }
+            // }
 
             }
             // Dryout fill logic here
@@ -575,21 +578,31 @@ void process:: secondary_fill()           // This functions runs the Secondary b
             flag_warning.start();
             // unsigned long override_msg_start=millis();
         }
-
+        // if(one_second_counter>=10)
         if(one_second_counter>=pre_end_time)
         {
-            screen=ProcessScreen;
-            lcd.clear();
-            process_flag=1;
-            secondarytimerflag=0;
-            mainscreenflag=0;
-            one_second_counter=0;
-            pauseflag=0;
-            error_check_flag=0;
-            flow_error_checkflag=0;
-            heater_start=1;
-            process_object.Contactor2_start();
-
+            if(probeoverride)
+            {
+                screen=OverrideScreen;              // Go to override screen if any override is active
+                overridescreenflag=1;
+                secondarytimerflag=0;
+                probecheckscreen=1;   // Flag to indicate that the probe check screen is currently active
+            return;
+            }
+            else
+            {
+                screen=ProcessScreen;
+                lcd.clear();
+                process_flag=1;
+                secondarytimerflag=0;
+                mainscreenflag=0;
+                one_second_counter=0;
+                pauseflag=0;
+                error_check_flag=0;
+                flow_error_checkflag=0;
+                heater_start=1;
+                process_object.Contactor2_start();
+            }
         }
     }
 
@@ -774,48 +787,48 @@ void process:: parameter_test()                // Sensor Testing menu
 
 
 
-void process:: heater1_start()
-{
-    // digitalWrite(SOLENOID1,HIGH);
-    // digitalWrite(CONTACTOR1,HIGH);
-    // if(!primary_filling_flag  && !error_check_flag)
-    if(heater_start || temp_drop_flag)
-    {
-        digitalWrite(HEATER1,HIGH);
-        if(dduflag && process_flag  )
-        {
-            T_contactor2_start.start();
-        }
-    }
-}
+// void process:: heater1_start()
+// {
+//     // digitalWrite(SOLENOID1,HIGH);
+//     // digitalWrite(CONTACTOR1,HIGH);
+//     // if(!primary_filling_flag  && !error_check_flag)
+//     if(heater_start || temp_drop_flag)
+//     {
+//         digitalWrite(HEATER1,HIGH);
+//         if(dduflag && process_flag  )
+//         {
+//             T_contactor2_start.start();
+//         }
+//     }
+// }
     
-void process:: heater1_stop()
-{
-    // digitalWrite(SOLENOID1,LOW);
-    // digitalWrite(CONTACTOR1,LOW);
-    digitalWrite(HEATER1,LOW);
-    T_contactor1_stop.start();
+// void process:: heater1_stop()
+// {
+//     // digitalWrite(SOLENOID1,LOW);
+//     // digitalWrite(CONTACTOR1,LOW);
+//     digitalWrite(HEATER1,LOW);
+//     T_contactor1_stop.start();
     
-}
+// }
 
-void process:: heater2_start()
-{
-     // solenoid2 on
-    // digitalWrite(SOLENOID2,HIGH);
-    // contactor2 on
-    // digitalWrite(CONTACTOR2,HIGH);
-    // heater2 on
-    digitalWrite(HEATER2,HIGH);
-}
+// void process:: heater2_start()
+// {
+//      // solenoid2 on
+//     // digitalWrite(SOLENOID2,HIGH);
+//     // contactor2 on
+//     // digitalWrite(CONTACTOR2,HIGH);
+//     // heater2 on
+//     digitalWrite(HEATER2,HIGH);
+// }
 
-void process:: heater2_stop()
-{
-    // heater2 off
-    if(!heater_start){
-        digitalWrite(HEATER2,LOW);
-        T_contactor2_stop.start();
-    }
-}
+// void process:: heater2_stop()
+// {
+//     // heater2 off
+//     if(!heater_start){
+//         digitalWrite(HEATER2,LOW);
+//         T_contactor2_stop.start();
+//     }
+// }
 
 void process:: process_stop()
 {
@@ -872,21 +885,21 @@ void process:: Contactor1_stop()
     
 }
 
-//     {
-//         digitalWrite(CONTACTOR1,LOW);
-//         if(dduflag)
-//         {
-//             T_heater2_stop.start();
-//         }
-//     }
-
-
 void process:: Contactor2_stop()
 {
     digitalWrite(CONTACTOR2,LOW);
 }
 
+void process:: Solenoid1_start()
+{
+    digitalWrite(SOLENOID1,HIGH);
+}
 
+void process:: Solenoid2_start()
+{
+    digitalWrite(SOLENOID2,HIGH);
+}
+ 
 void process:: Solenoid1_stop()
 {
     digitalWrite(SOLENOID1,LOW);

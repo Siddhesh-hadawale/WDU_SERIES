@@ -34,7 +34,7 @@ unsigned long solenoid_stop=0;
 int optime[3]={3,6,8};
 int prodtype[3]={150,250,400};
 // int Sfill_time[3]={10*240,(11*144)+60,13*90};
-int Sfill_default[3]={40 ,28 ,20 };
+int Sfill_default[3]={40 ,28 ,25 };
 int sfill_time=0;
 float base_calibration[3]={1.4,2.4,3.9};
 
@@ -129,6 +129,7 @@ void lcdclass::lcd_buzzer_toggle_start()
 
 void lcdclass::lcd_buzzer_toggle_stop()
 {
+    state=1;
     Error_buzzer_toggle.stop();
     
 }
@@ -264,12 +265,12 @@ void lcdclass::lcd_display()
             lcd.setCursor(1,0);
             lcd.print("SUBPRODUCT TYPE  ");  
             lcd.setCursor(1,1);
-            lcd.print("CALIBRATION   "); 
+            lcd.print("VOL.CALIBRATION   "); 
         break;
 
         case ServiceMenuScreen3:
             lcd.setCursor(1,0);
-            lcd.print("CALIBRATION   ");    
+            lcd.print("VOL.CALIBRATION   ");    
             lcd.setCursor(1,1);
             lcd.print("OPERATING TIME   "); 
         break;
@@ -398,7 +399,7 @@ void lcdclass::lcd_display()
 
         case TimeFactorSettings:
             lcd.setCursor(0,0);
-            lcd.print("SET TIME FACTOR");
+            lcd.print("SET TIME FACTOR   ");
             lcd.setCursor(0,1);
             lcd.print("DDU");
             lcd.print(prodtype[prodtypecounter]);
@@ -605,6 +606,112 @@ void lcdclass::lcd_display()
             // lcd.setCursor(0,1);
             // lcd.print("NO FUNCTION    ");
             process_object.parameter_test();
+        break;
+
+        case OverrideScreen:
+            if(flowoverride && flowcheckscreen)
+            {
+                if(overridescreenflag)
+                {
+                    lcd.setCursor(0,0);
+                    lcd.print("CHECK WATER FLOW  ");
+                    lcd.setCursor(0,1);
+                    lcd.print("SET TO CONTINUE ");
+                }
+                else
+                {
+                    overridescreenflag=1;
+                    flowcheckscreen=0;
+                }
+            }
+            else if(leveloverride && levelcheckscreen)
+            {
+                if(overridescreenflag)
+                {
+                    lcd.setCursor(0,0);
+                    lcd.print("CHECK PRI LEVEL ");
+                    lcd.setCursor(0,1);
+                    lcd.print("SET TO CONTINUE ");
+                }
+                else
+                {
+                    overridescreenflag=1;
+                    levelcheckscreen=0;
+                }
+            }
+            else if(probeoverride && probecheckscreen)
+            {
+                if(overridescreenflag)
+                {
+                    lcd.setCursor(0,0);
+                    lcd.print("CHECK SEC LEVEL ");
+                    lcd.setCursor(0,1);
+                    lcd.print("SET TO CONTINUE ");
+                }
+                else
+                {
+                    // overridescreenflag=1;
+                    probecheckscreen=0;
+
+                    // Process start after probe override is acknowledged
+                    screen=ProcessScreen;
+                    lcd.clear();
+                    process_flag=1;
+                    secondarytimerflag=0;
+                    mainscreenflag=0;
+                    one_second_counter=0;
+                    pauseflag=0;
+                    error_check_flag=0;
+                    flow_error_checkflag=0;
+                    heater_start=1;
+                    process_object.Contactor2_start();
+                }
+            }
+            else
+            {
+                overridescreenflag=0;
+                if(secondaryyes && dduflag)
+                {
+
+                    screen=SecondaryFillTimer;              // Go to secondary timer screen
+                    mainscreenflag=0;
+                    one_second_counter=0;
+                    secondarytimerflag=1;
+                    pauseflag=0;
+                    error_check_flag=0;
+                    heater_start=1;
+                    process_object.Contactor1_start();          // Start first contactor and then heater 1
+                }
+                else
+                {
+                    // -------- DIRECT PROCESS START --------
+                    // if(dduflag)
+                    // {   
+                        preheat_flag=1;
+                    // }
+                    // else
+                    // {
+                        // Serial3.println("sdu");
+                        // process_flag=1;
+                    // }
+                    
+                    screen=ProcessScreen;
+                    // process_flag=1;
+                    mainscreenflag=0;
+                    one_second_counter=0;
+                    pauseflag=0;
+                    error_check_flag=0;
+                    // Perform error check before starting
+                    process_object.error_check();
+                    if(error_check_flag)
+                    {
+                        return;                         // Stop if error detected
+                    }
+                    heater_start=1;
+                    process_object.Contactor1_start();   // Start process(Contactors and heaters starts)
+                }
+
+            }
         break;
 
         case ErrorScreen:

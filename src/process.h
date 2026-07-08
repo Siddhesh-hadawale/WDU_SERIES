@@ -15,15 +15,17 @@ class process
     void secondary_fill();
     void dryout_fill();
     void process_stop();
-    void heater1_start();
-    void heater1_stop();
-    void heater2_start();
-    void heater2_stop();    
+    // void heater1_start();
+    // void heater1_stop();
+    // void heater2_start();
+    // void heater2_stop();    
     // void water_flow_detection();
     void water_level_detection();
     void parameter_test();
     void Check_ticker_stop();
 
+    void Solenoid1_start();
+    void Solenoid2_start();
     void Solenoid1_stop();
     void Solenoid2_stop();
 

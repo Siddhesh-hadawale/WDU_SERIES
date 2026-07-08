@@ -94,7 +94,11 @@ extern bool testsettings;
 extern bool Secodaryfill_error_flag;
 extern bool override_alert_flag;
 extern bool check_flag;
-extern bool dryout_flag;      
+extern bool dryout_flag; 
+extern bool overridescreenflag;
+extern bool flowcheckscreen;  
+extern bool levelcheckscreen;
+extern bool probecheckscreen;   
 
 extern float calib_Heater1;
 extern float temp_error;
@@ -142,10 +146,6 @@ enum menus
     UserSettingsScreen2,
     UserSettingsScreen3,
     UserSettingsScreen4,
-    // UserSettingsScreen5,
-    // UserSettingsScreen6,
-    // UserSettingsScreen7,
-    // UserSettingsScreen8,
 
     LevelSensorSettings,
     TempSensorSettings,
@@ -171,6 +171,7 @@ enum menus
     SecondaryFillCheck,
 
     TestingScreen,
+    OverrideScreen,
     
     // SolenoidErrorScreen,
     ErrorScreen

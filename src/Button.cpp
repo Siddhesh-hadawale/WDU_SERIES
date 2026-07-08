@@ -58,13 +58,17 @@ bool factoryresetflag = 1;      // Confirmation flag for factory reset
 bool testsettings=0;
 bool intestmenu=0;
 bool override_alert_flag=0;        // Flag to indicate alert condition due to override settings
+bool overridescreenflag=0;        // Flag to indicate that the override screen is currently active
+bool flowcheckscreen=0;        // Flag to indicate that the flow check screen is currently active
+bool levelcheckscreen=0;      // Flag to indicate that the level check screen is currently active
+bool probecheckscreen=0;      // Flag to indicate that the probe check screen is currently active
 
 // ---------------- COUNTERS ----------------
 uint8_t skip_count = 0;         // Counter used for time skip logic
 uint8_t longpress_count = 0;    // Counter for smooth long press increment/decrement
 
 // ---------------- SAFETY PARAMETERS ----------------
-int Heatersafteytemp = 75;     // Current heater safety temperature setting
+int Heatersafteytemp = 80;     // Current heater safety temperature setting
 
 // ---------------- BUTTON PIN DEFINITIONS ----------------
 #define UP 35
@@ -1525,7 +1529,7 @@ void buttonClass:: user_settings()
     // - No active process running
     // - Not inside service menu
     // - No secondary timer running
-    if(!usersettings && !process_flag && !preheat_flag && !servicemenu && !secondarytimerflag && !intestmenu && !testsettings && !error_check_flag)
+    if(!usersettings && !process_flag && !preheat_flag && !servicemenu && !secondarytimerflag && !intestmenu && !testsettings && !error_check_flag && !dryout_flag && !overridescreenflag)
     {
       lcd.clear();
 
@@ -1598,6 +1602,47 @@ void buttonClass:: user_settings()
 
 void buttonClass:: back_screen()
 {
+    if(overridescreenflag)
+    {
+        lcd.clear();
+        overridescreenflag=0;
+        flowcheckscreen=0;
+        levelcheckscreen=0;
+        probecheckscreen=0;
+        screen=MainScreen;
+        mainscreenflag=1;
+        usersettings=0;
+        servicemenu=0;
+
+        // Reset pointer states
+        uppointer=0;
+        downpointer=0;
+        heater_start=0;
+
+        process_object.Contactor1_stop();
+        process_object.Solenoid1_stop();
+        process_object.Solenoid2_stop();
+        return;
+    }
+
+     if(error_check_flag && closetap)
+    {
+        lcd.clear();
+        error_check_flag=0;
+        closetap=0;
+        lcd_object.lcd_buzzer_toggle_stop();
+        return;
+    }
+
+    if(error_check_flag && Secodaryfill_error_flag)
+    {
+        lcd.clear();
+        error_check_flag=0;
+        Secodaryfill_error_flag=0;
+        lcd_object.lcd_buzzer_toggle_stop();
+        return;
+    }
+
     // -------- BACK FROM MAIN MENUS --------
     // If in user settings or service menu and not inside submenu
 
@@ -1854,6 +1899,12 @@ void buttonClass::enter_function()
         return;
     }
 
+    if(overridescreenflag)
+    {
+        overridescreenflag=0;
+        return;
+    }
+
     // -------- MAIN SCREEN : START PROCESS --------
     if(mainscreenflag && counter>0.0)
     {
@@ -1868,8 +1919,17 @@ void buttonClass::enter_function()
         // delay(1000);
         buzzerclass_object.Buzzer_beep(1000);
         buzzerclass_object.Buzzer_start();
+        process_object.Solenoid1_start();   // Start solenoid 1 for process initiation
         
-
+        if(flowoverride || leveloverride)
+        {
+            screen=OverrideScreen;              // Go to override screen if any override is active
+            mainscreenflag=0;
+            overridescreenflag=1;
+            flowcheckscreen=1;
+            levelcheckscreen=1;
+            return;
+        }
         // -------- SECONDARY FILL FLOW --------
         if(secondaryyes && dduflag)
         {
