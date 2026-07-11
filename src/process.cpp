@@ -296,6 +296,7 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
         // process_object.heater1_stop();
         process_object.Contactor1_stop();
         lcd_object.lcd_buzzer_toggle_start();
+        
         // Error_buzzer_toggle.start();
         // buzzerclass_object.heater_stop();
         }
@@ -327,12 +328,13 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
         if(!error_check_flag)
         {
             error_check_flag=1;
-        // process_object.process_stop();
-        heater_start=0;
-        // process_object.heater1_stop();
-        process_object.Contactor1_stop();
-        lcd_object.lcd_buzzer_toggle_start();
-        // buzzerclass_object.heater_stop();
+            // process_object.process_stop();
+            heater_start=0;
+            // process_object.heater1_stop();
+            process_object.Contactor1_stop();
+            // lcd_object.lcd_buzzer_toggle_start();
+            // Serial3.println("BUZZER TOGGLE START");
+            // buzzerclass_object.heater_stop();
         }
         return;
     }
@@ -367,7 +369,7 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
                         // process_object.heater1_stop();
                         // process_object.Contactor1_stop();
                         // buzzerclass_object.heater_stop();
-                    //    lcd_object.lcd_buzzer_toggle_start();
+                       lcd_object.lcd_buzzer_toggle_start();
                        process_object.Contactor1_stop();
                     }
                     return;
@@ -487,6 +489,11 @@ void process::water_level_detection()       // Water level Detection Fuction, It
             if(millis()-pf_start>=180000)   // If water level is low for more than 3 minutes
             {
                 level_detect=true;
+                if(!waterlevel_error_flag)
+                {
+                    lcd_object.lcd_buzzer_toggle_start();
+                    Serial3.println("BUZZER TOGGLE START"); 
+                }
                 waterlevel_error_flag=1;
                 // error_check_flag=0;
                 primary_filling_flag=0;

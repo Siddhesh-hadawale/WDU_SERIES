@@ -291,6 +291,7 @@ void buttonClass::back_to_home()
             error_check_flag = 1;  // Trigger error check
 
             screen = ErrorScreen;  // Redirect to error screen
+            lcd_object.lcd_buzzer_toggle_start();
         }
         else
         {
@@ -1911,6 +1912,8 @@ void buttonClass::enter_function()
         // Apply variant-specific settings
         one_second_counter=0;
         one_second_counter2=0;
+
+        probeerrorflag=0;
 
         process_object.variant_settings();
         

@@ -98,7 +98,8 @@ extern bool dryout_flag;
 extern bool overridescreenflag;
 extern bool flowcheckscreen;  
 extern bool levelcheckscreen;
-extern bool probecheckscreen;   
+extern bool probecheckscreen; 
+extern bool probeerrorflag;  
 
 extern float calib_Heater1;
 extern float temp_error;

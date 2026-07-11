@@ -55,6 +55,17 @@ void setup() {
   // delay(300);
 
   eeprom_object.eeprom_dataread();    // Read saved EEPROM settings
+  if(dduflag >1 || dduflag<0)
+  {
+    dduflag=0;
+    EEPROM.write(PRODUCT_SELECTION, dduflag);                       
+  }
+
+  if(prodtypecounter >2 || prodtypecounter<0)
+  {
+    prodtypecounter=0;
+    EEPROM.put(SUBPRODUCT_SELECTION,prodtypecounter);
+  }
   delay(10);
   variant=((prodtype[prodtypecounter])/10);
 

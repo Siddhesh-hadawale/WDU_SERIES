@@ -40,6 +40,7 @@ float base_calibration[3]={1.4,2.4,3.9};
 
 // Error blinking ticker for main screen
 Ticker error_blink(toggle_screen,500,0,MILLIS);
+
 Ticker Error_buzzer_toggle(buzzer_toggle,BUZZER_INTERVAL,0,MILLIS);
 
 void Override_alert()
@@ -123,12 +124,14 @@ void buzzer_toggle()
 }
 void lcdclass::lcd_buzzer_toggle_start()
 {
+    Serial3.println("BUZZER TOGGLE START");
     state=1;
     Error_buzzer_toggle.start();
 }
 
 void lcdclass::lcd_buzzer_toggle_stop()
 {
+    Serial3.println("BUZZER TOGGLE STOP");
     state=1;
     Error_buzzer_toggle.stop();
     
@@ -471,7 +474,7 @@ void lcdclass::lcd_display()
                 lcd.setCursor(0,0);
                 // digitalWrite(YELLOW_LED,HIGH);
                 // digitalWrite(RED_LED,LOW);
-                lcd.print("PROCESS START  ");
+                lcd.print("PROCESS START       ");
                 lcd.setCursor(0,1);
                 lcd.print("PRE-HEATING...   ");
                 process_object.boiler_preheat();
@@ -481,7 +484,7 @@ void lcdclass::lcd_display()
 
         case PrimaryFillScreen:
             lcd.setCursor(0,0);
-            lcd.print("PRIMARY BOILER   ");
+            lcd.print("PRIMARY BOILER    ");
             lcd.setCursor(0,1);
             lcd.print("FILLING...      ");
             process_object.error_check();
@@ -718,6 +721,7 @@ void lcdclass::lcd_display()
             // Serial3.println(error_check_flag);
             if(error_check_flag)
             {
+                // Serial3.println("1",error_check_flag);
                 if(state)
                 {
                     digitalWrite(BUZZER,HIGH);
