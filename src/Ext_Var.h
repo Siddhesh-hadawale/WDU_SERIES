@@ -174,7 +174,6 @@ enum menus
     TestingScreen,
     OverrideScreen,
     
-    // SolenoidErrorScreen,
     ErrorScreen
 };
 

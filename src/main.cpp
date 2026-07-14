@@ -25,60 +25,37 @@ void protected_write_io(volatile uint8_t &reg, uint8_t value) {            // Wa
 /*================ System Initialization ================*/
 void setup() {
 
-
   // Clear all reset flags
-  RSTCTRL.RSTFR = RSTCTRL_WDRF_bm; // Clear watchdog reset flag only
-
+  RSTCTRL.RSTFR = RSTCTRL_WDRF_bm; // Clear watchdog reset flag onl 
   // Configure watchdog timer: ~8192/1024 = 8s timeout (8192 cycles)
-  protected_write_io(WDT.CTRLA, WDT_PERIOD_8KCLK_gc);
-
-
-  lcd_object.lcd_setup(); 
-
-  // eeprom_object.eeprom_defaultvalue();
-  // eeprom_object.eeprom_datawrite();
-
-
-  Serial3.begin(9600); 
-  // Serial3.println("BOOT");
-              // Initialize LCD
-                // Start serial communication
+  protected_write_io(WDT.CTRLA, WDT_PERIOD_8KCLK_gc);  
+  lcd_object.lcd_setup();    // Initialize LCD
+  Serial3.begin(9600);      // Start serial communication        
   eeprom_object.eeprom_update_sensor();// Update EEPROM with Sensors default values
-  
   buttonClass_object.button_setup();  // Initialize button module
   buzzerclass_object.buzzer_setup();  // Initialize buzzer module
   process_object.process_setup();     // Initialize process control
-  PT100_object.PT100_setup();         // Initialize PT100 sensor
-  // digitalWrite(SOLENOID1,HIGH);
-
-  // eeprom_object.eeprom_datawrite(); // Write default EEPROM data
-  // delay(300);
-
+  PT100_object.PT100_setup();         // Initialize PT100 senso 
   eeprom_object.eeprom_dataread();    // Read saved EEPROM settings
   if(dduflag >1 || dduflag<0)
   {
     dduflag=0;
     EEPROM.write(PRODUCT_SELECTION, dduflag);                       
   }
-
   if(prodtypecounter >2 || prodtypecounter<0)
   {
     prodtypecounter=0;
     EEPROM.put(SUBPRODUCT_SELECTION,prodtypecounter);
   }
   delay(10);
-  variant=((prodtype[prodtypecounter])/10);
-
-  Max_liter=(optime[optimecounter])*(variant/10.0);
-
-  cli();                              // Disable interrupts during timer setup
-
+  variant=((prodtype[prodtypecounter])/10);  
+  Max_liter=(optime[optimecounter])*(variant/10.0) ;
+  cli();                              // Disable interrupts during timer setu 
   TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm;                           // Enable timer overflow interrupt
   TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_NORMAL_gc;                   // Set timer in normal mode
   TCA0.SINGLE.EVCTRL &= ~(TCA_SINGLE_CNTEI_bm);                      // Disable event counting
   TCA0.SINGLE.PER = PERIOD_EXAMPLE_VALUE;                            // Load timer period value
-  TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1024_gc | TCA_SINGLE_ENABLE_bm; // Set clock prescaler and enable timer
-
+  TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1024_gc | TCA_SINGLE_ENABLE_bm; // Set clock prescaler and enable time 
   sei();                              // Enable global interrupts
 }
 
@@ -103,7 +80,6 @@ ISR(TCA0_OVF_vect)
       one_second_counter++;           // Increment process seconds
       
       //Serial3.println(one_second_counter); // Debug print
-      // Serial3.println(pauseflag);
       time_counter=0;                 // Reset process counter
     }
   }
@@ -113,7 +89,8 @@ ISR(TCA0_OVF_vect)
 
 
 /*================ Main Execution Loop ================*/
-void loop() {
+void loop()
+{
   __builtin_avr_wdr();                // Watchdog timer reset to prevent system reset
 
   lcd_object.lcd_display();           // Update LCD screen

@@ -11,8 +11,6 @@ class buzzerclass
     void buzzer_beep();
     void buzzer_update();
     void Buzzer_start();
-    void heater_start();
-    void heater_stop();
     void Buzzer_beep(uint32_t interval1);
 };
 

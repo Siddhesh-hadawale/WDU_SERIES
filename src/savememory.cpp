@@ -26,18 +26,14 @@ eepromclass::eepromclass()
 void eepromclass::eeprom_defaultvalue()                 // Factory Reset Condition
 {
     counter=0.0;
-    // dduflag=0;
-    // prodtypecounter=0;
     secondaryyes = 1;          // Secondary fill option enable/disable
-    // calibration_value=1.4;    // Calibration value for 1.5L product, default product
     calibration_value=base_calibration[prodtypecounter];
     solenoidoverride=1;
     flowoverride=0;
     leveloverride=0;
     probeoverride=0;
     Heatersafteytemp=80;
-     sfill_time = Sfill_default[prodtypecounter];
-    // sfill_time=40;
+    sfill_time = Sfill_default[prodtypecounter];
     optimecounter=0;
     calib_Heater1=0.0;
     temp_error=0.0;
@@ -47,8 +43,6 @@ void eepromclass::eeprom_defaultvalue()                 // Factory Reset Conditi
 
 void eepromclass:: eeprom_update_sensor()
 {
-    // EEPROM.update(SECONDARY_FILL, secondaryyes);
-
     EEPROM.update(FLOW_CONTROL, flowoverride);
 
     EEPROM.update(LEVEL_CONTROL, leveloverride);
@@ -140,10 +134,6 @@ void eepromclass :: eeprom_dataread()
     EEPROM.get(PROBE_CONTROL, probeoverride);
 
     EEPROM.get(SECONDARY_FILL_TIME, sfill_time);
-
-    // Serial3.println(dduflag);
-    // Serial3.println(calibration_value);
-
 }
 
 eepromclass eeprom_object= eepromclass();
