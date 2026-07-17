@@ -555,12 +555,12 @@ void lcdclass::lcd_display()
 
         case TempSensorSettings:
             lcd.setCursor(0,0);
-            lcd.print("PROBE OVERRIDE");
+            lcd.print("PROBE CONTROL");
         break;
 
         case LevelSensorSettings:
             lcd.setCursor(0,0);
-            lcd.print("LEVEL OVERRIDE");
+            lcd.print("LEVEL CONTROL");
         break;
 
         case FactoryResetScreen:
