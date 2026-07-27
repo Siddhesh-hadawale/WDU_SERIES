@@ -236,6 +236,7 @@ void buttonClass::back_to_home()
         secondarytimerflag = 0;  // Stop secondary timer
         error_check_flag=0;      // Reset error check flag
         time_skip=0;            // Reset time skip logic
+        dryout_flag=0;             // Reset dryout flag
 
         
 
