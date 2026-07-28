@@ -754,6 +754,7 @@ void lcdclass::lcd_display()
                 Error_buzzer_toggle.stop();
                 lcd.clear();
                 pauseflag=0;
+                primary_filling_flag=0;  // new added
                 digitalWrite(BUZZER,LOW);
                 digitalWrite(YELLOW_LED,LOW);
                 if(secondarytimerflag)

@@ -377,8 +377,11 @@ void process::water_level_detection()       // Water level Detection Fuction, It
                 pauseflag=0;
                 level_detect=true;
                 lcd.clear();
+                if(!Probe1_Err)
+                {
                 heater_start=1;                                      // need this flag to start/stop the heater
                 process_object.Contactor1_start();
+                }
                 if(secondarytimerflag)
                 {
                     screen=SecondaryFillTimer;
