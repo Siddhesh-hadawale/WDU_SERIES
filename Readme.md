@@ -2,7 +2,7 @@
 
 ## 📌 Project Information
 
-- **Author**              : Siddhesh Hadawale  
+- **Author**              : Siddhesh Hadawale & Austin George  
 - **PCB Version**         : WDU_CONN_V1.5, WDU_DISP_V1.5  
 - **Microcontroller**     : ATmega4809  
 - **Product Code**        : WDU Series  
