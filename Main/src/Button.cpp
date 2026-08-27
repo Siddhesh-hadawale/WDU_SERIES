@@ -237,7 +237,7 @@ void buttonClass::back_to_home()
         error_check_flag=0;      // Reset error check flag
         time_skip=0;            // Reset time skip logic
         dryout_flag=0;             // Reset dryout flag
-
+        Secodaryfill_error_flag=0;     // Reset secondary fill error flag
         
 
         // -------- STOP HARDWARE OPERATIONS --------
