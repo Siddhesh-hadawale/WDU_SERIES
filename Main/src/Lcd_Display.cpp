@@ -565,8 +565,19 @@ void lcdclass::lcd_display()
 
         case FactoryResetScreen:
             lcd.setCursor(0,0);
+            lcd.print("RESET SETTINGS ");
+            lcd.setCursor(1,1);
+            lcd.print("YES");
+            lcd.setCursor(12,1);
+            lcd.print("NO");
+        break;
+
+        case FactorySettingsScreen:
+            lcd.setCursor(0,0);
             lcd.print("FACTORY SETTINGS ");
         break;
+
+        
 
         case TestingScreen:
             process_object.parameter_test();

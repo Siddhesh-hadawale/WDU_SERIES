@@ -292,7 +292,7 @@ void process:: error_check()                  // Checks the Error,1)Flow Switch 
                     error_check_flag=1;
                     pauseflag=1;
                     temp_error_count=0;
-
+ 
                     screen=ErrorScreen;
                     if(!probeerrorflag)
                     {

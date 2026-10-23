@@ -62,7 +62,7 @@ bool overridescreenflag=0;        // Flag to indicate that the override screen i
 bool flowcheckscreen=0;        // Flag to indicate that the flow check screen is currently active
 bool levelcheckscreen=0;      // Flag to indicate that the level check screen is currently active
 bool probecheckscreen=0;      // Flag to indicate that the probe check screen is currently active
-
+bool factoryresetokflag=1;    // Flag to indicate that factory reset has been acknowledged and completed
 // ---------------- COUNTERS ----------------
 uint8_t skip_count = 0;         // Counter used for time skip logic
 uint8_t longpress_count = 0;    // Counter for smooth long press increment/decrement
@@ -251,7 +251,7 @@ void buttonClass::back_to_home()
 
         // Default screen → Main Screen
         screen = MainScreen;
-        // TEST
+
         
 
         // -------- ERROR HANDLING LOGIC --------
@@ -913,7 +913,20 @@ void buttonClass::increment()
                     
                 break;
 
-                case FactoryResetScreen:                                         // Factory reset confirmation toggle
+                case FactoryResetScreen:
+                if(!factoryresetokflag)  // If currently disabled
+                {
+                    buttonClass_object.setPointer(0,1); // Select YES option
+                    factoryresetokflag = 1;                   // Enable secondary fill
+                }
+                else                // If currently enabled
+                {
+                    buttonClass_object.setPointer(11,1); // Move pointer to NO option
+                    factoryresetokflag = 0;                    // Disable secondary fill
+                }
+                break;
+
+                case FactorySettingsScreen:                                         // Factory reset confirmation toggle
                     if(!factoryresetflag)
                     {
                         lcd.clear();
@@ -1426,8 +1439,21 @@ void buttonClass::decrement()
                     }
             break;
 
+            case FactoryResetScreen:
+                if(!factoryresetokflag)  // If currently disabled
+                {
+                    buttonClass_object.setPointer(0,1); // Select YES option
+                    factoryresetokflag = 1;                   // Enable secondary fill
+                }
+                else                // If currently enabled
+                {
+                    buttonClass_object.setPointer(11,1); // Move pointer to NO option
+                    factoryresetokflag = 0;                    // Disable secondary fill
+                }
+            break;
+
             // -------- FACTORY RESET CONFIRMATION --------
-            case FactoryResetScreen:                                         // Factory reset confirmation toggle
+            case FactorySettingsScreen:                                         // Factory reset confirmation toggle
                     if(!factoryresetflag)
                     {
                         lcd.clear();
@@ -1788,6 +1814,22 @@ void buttonClass:: back_screen()
             break;
 
             // -------- FACTORY RESET SCREEN --------
+            case FactorySettingsScreen:
+                uppointer = 0;
+                downpointer = 1;
+                servicemenu = 1;
+                buttonClass_object.setPointer(0,1);
+
+                if(dduflag)
+                {
+                    screen = ServiceMenuScreen7;
+                }
+                else
+                {
+                    screen = SDUServiceMenuScreen4;
+                }
+            break;
+
             case FactoryResetScreen:
                 uppointer = 0;
                 downpointer = 1;
@@ -2116,12 +2158,41 @@ void buttonClass::enter_function()
                 
              break;
             
+
+            case FactorySettingsScreen:
+                 if(factoryresetflag)                              // If user confirmed reset
+                {
+                    screen=FactoryResetScreen;
+                    inmenu=1;
+                    
+                    if(factoryresetokflag)
+                    {
+                        buttonClass_object.setPointer(0,1);
+                    }
+                    else
+                    { 
+                        buttonClass_object.setPointer(11,1);
+                    }
+                }
+                else                                                 // If reset not confirmed
+                {
+                    uppointer=1;
+                    downpointer=0;
+                    testsettings=1;
+                     inmenu=1;
+                    screen=TestingScreen;
+                    screen2=TestMenu1;
+                }
+
+
+                
+            break;
             // -------- FACTORY RESET --------
             case FactoryResetScreen:
-                if(factoryresetflag)                              // If user confirmed reset
+                if(factoryresetokflag)                              // If user confirmed reset
                 {
                     lcd.setCursor(0,0);
-                    lcd.print(" FACTORY RESET");
+                    lcd.print("PARAMETER RESET");
                     lcd.setCursor(5,1);
                     lcd.print(" DONE"); 
                     digitalWrite(BUZZER,HIGH);
@@ -2143,12 +2214,21 @@ void buttonClass::enter_function()
                 }
                 else                                                 // If reset not confirmed
                 {
-                    uppointer=1;
-                    downpointer=0;
-                    testsettings=1;
-                     inmenu=1;
-                    screen=TestingScreen;
-                    screen2=TestMenu1;
+                    if(dduflag)
+                    {
+                        screen = ServiceMenuScreen7;
+                    }
+                    else
+                    {
+                        screen = SDUServiceMenuScreen4;
+                    }
+                    // Reset pointer states
+                    uppointer = 0;
+                    downpointer = 1;
+                    buttonClass_object.setPointer(0,1);
+                    inmenu = 0;   // Exit submenu mode
+                    testsettings=0;
+                    return;
                 }
             break;
         }
@@ -2275,7 +2355,7 @@ void buttonClass::enter_function()
             if(downpointer)
             {
                 factoryresetflag = 1;          // Default selection → YES
-                screen = FactoryResetScreen;  // Enter factory reset screen
+                screen = FactorySettingsScreen;  // Enter factory reset screen
                 inmenu = 1;
 
                 buttonClass_object.setPointer(0,1); // Set pointer to confirmation
@@ -2295,7 +2375,7 @@ void buttonClass::enter_function()
         case SDUServiceMenuScreen4:
             if(downpointer)
             {
-                screen = FactoryResetScreen; // Enter factory reset
+                screen = FactorySettingsScreen; // Enter factory reset
                 factoryresetflag = 1;        // Default → YES
                 inmenu = 1;
 

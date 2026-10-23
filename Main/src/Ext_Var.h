@@ -99,7 +99,8 @@ extern bool overridescreenflag;
 extern bool flowcheckscreen;  
 extern bool levelcheckscreen;
 extern bool probecheckscreen; 
-extern bool probeerrorflag;  
+extern bool probeerrorflag; 
+extern bool factoryresetokflag; 
 
 extern float calib_Heater1;
 extern float temp_error;
@@ -164,6 +165,7 @@ enum menus
     ProbeCalibrationSettings,
     TimeFactorSettings,
 
+    FactorySettingsScreen,
     FactoryResetScreen,
 
     ProcessScreen,
