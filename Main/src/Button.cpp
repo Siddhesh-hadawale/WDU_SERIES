@@ -242,8 +242,12 @@ void buttonClass::back_to_home()
 
         // -------- STOP HARDWARE OPERATIONS --------
         process_object.Contactor1_stop();
-        digitalWrite(SOLENOID1, LOW);  // Close solenoid 1
-        digitalWrite(SOLENOID2, LOW);  // Close solenoid 2
+        // digitalWrite(SOLENOID1, LOW);  // Close solenoid 1
+        // digitalWrite(SOLENOID2, LOW);  // Close solenoid 2
+
+        solenoid_time=0;
+        process_object.Solenoid_ticker_start();
+
         digitalWrite(POWER_DETECTION, LOW);  // Sensor OFF
 
         // -------- RESTORE SETTINGS FROM EEPROM --------
@@ -1576,8 +1580,11 @@ void buttonClass:: back_screen()
         heater_start=0;
 
         process_object.Contactor1_stop();
-        process_object.Solenoid1_stop();
-        process_object.Solenoid2_stop();
+        
+        solenoid_time=0;
+        process_object.Solenoid_ticker_start();
+        // process_object.Solenoid1_stop();
+        // process_object.Solenoid2_stop();
         return;
     }
 

@@ -20,6 +20,8 @@ class process
     void parameter_test();
     void Check_ticker_stop();
 
+    void Solenoid_ticker_start();
+
     void Solenoid1_start();
     void Solenoid2_start();
     void Solenoid1_stop();

@@ -123,6 +123,7 @@ extern float time_per_step;
 extern int previous_time;
 extern int Heatersafteytemp;
 extern unsigned long solenoid_stop;
+extern int solenoid_time;
 
 extern uint8_t skip_count;
 extern uint16_t time_counter2;

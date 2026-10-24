@@ -35,7 +35,8 @@ int previous_time=0;                                        // Used to track the
 int temp_error_count=0;
 int screen2=0;
 int dryout_fill_time,dryout_calculation=0;
-bool heater_start=false;   // Counter for consecutive temperature error readings (used for error handling)              
+int solenoid_time=0;                                         // Timer for solenoid delay
+bool heater_start=false;                                     // Counter for consecutive temperature error readings (used for error handling)              
 
 #define FLOW_SWITCH 24
 // Solenoid Pins
@@ -52,7 +53,11 @@ bool heater_start=false;   // Counter for consecutive temperature error readings
 #define POWER_DETECTION 5
 #define WATER_LEVEL_SENSOR 4
 
+#define ONE_SECOND 1000
+#define SOLENOID_DELAY_TIME 120      // in seconds
+
 #define STARTING_DELAY 2000     // Delay in milliseconds before starting/stopping heaters and contactors to ensure proper operation and avoid electrical issues
+
 
 #define PREHEAT_TIME 240         // Time in seconds for preheating the boiler before starting the main process
 // #define PREHEAT_TIME 10
@@ -64,9 +69,28 @@ void contact2_start();
 void contact1_stop();
 void contact2_stop();
 void Change_flag();
+void solenoid_delay_stop();
 
 
 // Tickers for managing delayed start and stop of heaters and contactors during the process
+Ticker T_Solenoid_stop(solenoid_delay_stop,ONE_SECOND,0,MILLIS);
+ void solenoid_delay_stop()
+ {
+    solenoid_time++;
+    if(solenoid_time >= SOLENOID_DELAY_TIME )
+    {
+        solenoid_time=0;
+        process_object.Solenoid1_stop();
+        process_object.Solenoid2_stop();
+        T_Solenoid_stop.stop();
+
+    }
+ }
+
+ void process :: Solenoid_ticker_start()
+ {
+    T_Solenoid_stop.start();
+ }
 
 Ticker T_contactor2_start(contact2_start,(STARTING_DELAY),1,MILLIS);
 Ticker T_contactor1_stop(contact1_stop,STARTING_DELAY,1,MILLIS);
@@ -127,6 +151,7 @@ void process:: ticker_update()
     T_contactor1_stop.update();
     T_contactor2_stop.update();
     flag_warning.update();
+    T_Solenoid_stop.update();
 }  
 
 void process:: variant_settings()      // Calculations for Process time and Secondary Fill time for different variant
@@ -570,8 +595,10 @@ void process:: process_start()                    // Process timing funcution
             EEPROM.update(SECONDARY_FILL, secondaryyes);
             process_object.Contactor1_stop();
 
-            process_object.Solenoid1_stop();
-            process_object.Solenoid2_stop();
+            // process_object.Solenoid1_stop();
+            // process_object.Solenoid2_stop();
+            solenoid_time=0;
+            process_object.Solenoid_ticker_start();
 
             if(solenoidoverride)                              
             {
@@ -652,7 +679,7 @@ void process:: parameter_test()                // Sensor Testing menu
             }
             else
             {
-                lcd.print(calib_Heater1);
+                lcd.print(calib_Heater1,0);
                 lcd.print((char)223);
                 lcd.print("C       ");
             }

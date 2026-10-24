@@ -546,6 +546,8 @@ void lcdclass::lcd_display()
             lcd.setCursor(0,0);
             lcd.print("PROBE CALB ");
             lcd.print(calib_Heater1,1);
+            // lcd.print((char)223);
+            // lcd.print("C");
             lcd.print(" ");
             lcd.setCursor(0,1);
             lcd.print("Error  ");
