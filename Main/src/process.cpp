@@ -13,6 +13,7 @@ bool primary_filling_flag=0;                              // Flag to indicate pr
 bool preheat_flag=0;                                           // Flag to indicate boiler preheating is in progress
 bool Secodaryfill_error_flag=0;
 bool dryout_flag=0;                                           // Flag to indicate dryout condition during process
+bool probe_misplace_error_flag =0;
 float sfill_collection,after_dryout_fill=0;
 
 
@@ -37,6 +38,13 @@ int screen2=0;
 int dryout_fill_time,dryout_calculation=0;
 int solenoid_time=0;                                         // Timer for solenoid delay
 bool heater_start=false;                                     // Counter for consecutive temperature error readings (used for error handling)              
+
+float startTemp = 0.0;
+unsigned long checkStartMillis = 0;
+bool firstCheck = true;
+
+int lowTempRiseCount = 0;
+const int WARNING_COUNT = 5;
 
 #define FLOW_SWITCH 24
 // Solenoid Pins
@@ -63,6 +71,10 @@ bool heater_start=false;                                     // Counter for cons
 // #define PREHEAT_TIME 10
 #define SECONDARY_CHECK_TIME 300   // Secondary boiler filling check time in seconds
 #define OVERRIDE_ALERT_INTERVAL 600  // Time in seconds after which override alert should be triggered during the process if override settings are enabled
+
+const unsigned long CHECK_INTERVAL = 30000; // 30 seconds                           For probe misplace 
+const float MIN_TEMP_RISE = 1.0;            // Minimum rise in °C                        detection
+
 // #define OVERRIDE_ALERT_INTERVAL 30
 
 void contact2_start();
@@ -77,7 +89,7 @@ Ticker T_Solenoid_stop(solenoid_delay_stop,ONE_SECOND,0,MILLIS);
  void solenoid_delay_stop()
  {
     solenoid_time++;
-    if(solenoid_time >= SOLENOID_DELAY_TIME )
+    if(solenoid_time >= SOLENOID_DELAY_TIME && !process_flag && !secondarytimerflag && !preheat_flag)
     {
         solenoid_time=0;
         process_object.Solenoid1_stop();
@@ -440,6 +452,74 @@ void process::water_level_detection()       // Water level Detection Fuction, It
     {
         digitalWrite(POWER_DETECTION, HIGH);  // Sensor OFF
     }
+}
+
+void process :: Probe_misplace(float currentTemp)
+{
+     unsigned long now = millis();
+
+    // Save the initial temperature
+    if (firstCheck)
+    {
+        startTemp = currentTemp;
+        checkStartMillis = now;
+        firstCheck = false;
+        return;
+    }
+
+    // Check after every 30 seconds
+    if (now - checkStartMillis >= CHECK_INTERVAL)
+    {
+        float tempRise = currentTemp - startTemp;
+
+        Serial3.print("Start temperature: ");
+        Serial3.print(startTemp, 2);
+
+        Serial3.print(" °C | Current temperature: ");
+        Serial3.print(currentTemp, 2);
+
+        Serial3.print(" °C | Rise: ");
+        Serial3.print(tempRise, 2);
+        Serial3.println(" °C");
+
+       if (tempRise < MIN_TEMP_RISE)
+        {
+            lowTempRiseCount++;
+
+            Serial3.print("Insufficient temperature rise count: ");
+            Serial3.println(lowTempRiseCount);
+
+            if (lowTempRiseCount >= WARNING_COUNT)
+            {
+                Serial3.println("WARNING: Insufficient temperature rise!");
+                lowTempRiseCount=0;
+                probe_misplace_error_flag=1;
+                process_flag=0;
+                error_check_flag=1;
+                secondarytimerflag=0;
+                one_second_counter=0;
+                time_skip=0;
+                dryout_flag=0;
+                heater_start=0;
+                lcd_object.lcd_buzzer_toggle_start();
+                screen=ErrorScreen;
+                process_object.Contactor1_stop();
+                digitalWrite(SOLENOID1, LOW);  // Close solenoid 1
+                digitalWrite(SOLENOID2, LOW);  // Close solenoid 2
+            }
+        }
+        else
+        {
+            lowTempRiseCount = 0;
+
+            Serial3.println("Temperature is increasing normally");
+        }
+
+        // Begin the next checking period
+        startTemp = currentTemp;
+        checkStartMillis = now;
+    }
+
 }
 
 void process:: dryout_fill()                                                      // Secondary boiler dryout fill function, It is called when the temperature drop condition is detected during the process which indicates that the secondary boiler might have run dry and needs to be refilled before resuming the process. This function manages the timing and error handling for refilling the secondary boiler in this scenario.

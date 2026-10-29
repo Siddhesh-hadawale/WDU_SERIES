@@ -238,6 +238,7 @@ void buttonClass::back_to_home()
         time_skip=0;            // Reset time skip logic
         dryout_flag=0;             // Reset dryout flag
         Secodaryfill_error_flag=0;     // Reset secondary fill error flag
+        probe_misplace_error_flag=0;
         
 
         // -------- STOP HARDWARE OPERATIONS --------
@@ -1602,6 +1603,15 @@ void buttonClass:: back_screen()
         lcd.clear();
         error_check_flag=0;
         Secodaryfill_error_flag=0;
+        lcd_object.lcd_buzzer_toggle_stop();
+        return;
+    }
+
+     if(error_check_flag && probe_misplace_error_flag)   // If secondary fill error is active and back button is pressed → exit to main screen
+    {
+        lcd.clear();
+        error_check_flag=0;
+        probe_misplace_error_flag=0;
         lcd_object.lcd_buzzer_toggle_stop();
         return;
     }

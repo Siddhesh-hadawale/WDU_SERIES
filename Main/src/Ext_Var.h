@@ -101,6 +101,7 @@ extern bool levelcheckscreen;
 extern bool probecheckscreen; 
 extern bool probeerrorflag; 
 extern bool factoryresetokflag; 
+extern bool probe_misplace_error_flag;
 
 extern float calib_Heater1;
 extern float temp_error;

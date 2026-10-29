@@ -1,0 +1,410 @@
+Heater Temp: 51.04
+Heater Temp: 50.99
+Dryout Time Calculation: 19
+Heater Temp: 51.37
+Heater Temp: 50.69
+Heater Temp: 50.56
+Heater Temp: 50.91
+Heater Temp: 51.17
+Heater Temp: 50.59
+Heater Temp: 50.46
+Heater Temp: 50.66
+Heater Temp: 50.74
+Heater Temp: 50.79
+Heater Temp: 51.09
+Heater Temp: 50.81
+Heater Temp: 50.31
+Heater Temp: 50.16
+Heater Temp: 50.29
+Heater Temp: 50.69
+Heater Temp: 50.66
+Heater Temp: 50.61
+Heater Temp: 50.19
+Heater Temp: 50.44
+Heater Temp: 50.66
+Heater Temp: 50.69
+Heater Temp: 50.56
+Heater Temp: 49.94
+Heater Temp: 50.44
+Heater Temp: 50.31
+Heater Temp: 50.54
+Heater Temp: 50.36
+Heater Temp: 50.51
+Heater Temp: 50.26
+Heater Temp: 50.41
+Heater Temp: 49.94
+Heater Temp: 50.16
+Heater Temp: 50.44
+Heater Temp: 50.36
+Heater Temp: 50.29
+Heater Temp: 48.96
+Heater Temp: 50.59
+Heater Temp: 50.44
+Heater Temp: 50.44
+Heater Temp: 49.76
+Heater Temp: 49.86
+Heater Temp: 50.91
+Heater Temp: 49.81
+Heater Temp: 49.38
+Heater Temp: 49.84
+Heater Temp: 50.59
+Heater Temp: 49.86
+Heater Temp: 49.96
+Heater Temp: 50.21
+Heater Temp: 50.89
+Heater Temp: 50.06
+Heater Temp: 49.41
+Heater Temp: 50.09
+Heater Temp: 49.86
+Heater Temp: 50.49
+Heater Temp: 50.01
+Heater Temp: 50.79
+Heater Temp: 49.84
+Heater Temp: 50.81
+Heater Temp: 49.94
+Heater Temp: 49.94
+Heater Temp: 50.31
+Heater Temp: 50.41
+Heater Temp: 49.86
+Heater Temp: 50.56
+Heater Temp: 50.41
+Heater Temp: 49.58
+Heater Temp: 49.33
+Heater Temp: 49.91
+Heater Temp: 50.31
+Heater Temp: 50.49
+Start temperature: 49.86 °C | Current temperature: 50.49 °C | Rise: 0.63 °C
+Insufficient temperature rise count: 1
+Heater Temp: 49.06
+Heater Temp: 49.58
+Heater Temp: 50.59
+Heater Temp: 49.99
+Heater Temp: 49.89
+Heater Temp: 50.14
+Heater Temp: 50.96
+Heater Temp: 49.76
+Start temperature: 50.49 °C | Current temperature: 49.76 °C | Rise: -0.73 °C
+Insufficient temperature rise count: 2
+Heater Temp: 50.54
+Heater Temp: 50.61
+Heater Temp: 50.31
+Heater Temp: 50.66
+Heater Temp: 50.66
+Heater Temp: 50.74
+Heater Temp: 50.64
+Heater Temp: 51.39
+Start temperature: 49.76   C | Current temperature: 51.39 °C | Rise: 1.63 °C
+Temperature is increasing normally
+Heater Temp: 51.87
+Heater Temp: 51.52
+Heater Temp: 52.80
+Heater Temp: 52.90
+Heater Temp: 53.68
+Heater Temp: 54.25
+Heater Temp: 55.18
+Heater Temp: 55.03
+Heater Temp: 55.68
+Heater Temp: 55.94
+Heater Temp: 55.71
+Heater Temp: 55.84
+Heater Temp: 56.51
+Heater Temp: 56.24
+Heater Temp: 56.86
+Heater Temp: 56.34
+Heater Temp: 57.39
+Heater Temp: 57.47
+Heater Temp: 58.47
+Heater Temp: 57.74
+Heater Temp: 58.00
+Heater Temp: 57.92
+Heater Temp: 58.37
+Heater Temp: 57.29
+Heater Temp: 58.37
+Heater Temp: 58.55
+Heater Temp: 59.23
+Heater Temp: 58.20
+Heater Temp: 59.33
+Heater Temp: 59.63
+Heater Temp: 59.70
+Heater Temp: 59.86
+Heater Temp: 60.56
+17:47:54:172 -> Heater Temp: 60.96
+17:47:57:179 -> Heater Temp: 59.93
+17:48:03:279 -> Heater Temp: 60.56
+17:48:06:288 -> Heater Temp: 60.33
+17:48:09:291 -> Heater Temp: 60.56
+17:48:12:398 -> Heater Temp: 60.41
+17:48:18:498 -> Heater Temp: 61.09
+17:48:21:522 -> Heater Temp: 60.08
+17:48:24:513 -> Heater Temp: 60.71
+17:48:28:019 -> Heater Temp: 61.06
+17:48:33:620 -> Heater Temp: 61.41
+17:48:36:629 -> Heater Temp: 61.56
+17:48:39:636 -> Heater Temp: 61.79
+17:48:43:542 -> Heater Temp: 61.36
+17:48:48:843 -> Heater Temp: 62.19
+17:48:51:850 -> Heater Temp: 62.60
+17:48:54:858 -> Heater Temp: 62.67
+17:48:59:162 -> Heater Temp: 63.05
+17:49:03:965 -> Heater Temp: 63.32
+17:49:06:973 -> Heater Temp: 63.42
+17:49:09:989 -> Heater Temp: 63.58
+17:49:14:591 -> Heater Temp: 64.53
+17:49:19:094 -> Heater Temp: 63.98
+17:49:22:102 -> Heater Temp: 65.16
+17:49:25:112 -> Heater Temp: 64.15
+17:49:30:112 -> Heater Temp: 64.48
+17:49:34:317 -> Heater Temp: 64.66
+17:49:37:325 -> Heater Temp: 65.34
+17:49:40:332 -> Heater Temp: 64.66
+17:49:45:843 -> Heater Temp: 64.78
+17:49:49:438 -> Heater Temp: 64.98
+17:49:52:462 -> Heater Temp: 65.06
+17:49:55:453 -> Heater Temp: 64.83
+17:50:01:153 -> Heater Temp: 65.16
+17:50:04:559 -> Heater Temp: 65.24
+17:50:07:565 -> Heater Temp: 65.79
+17:50:10:576 -> Heater Temp: 66.02
+17:50:16:675 -> Heater Temp: 65.64
+17:50:19:781 -> Heater Temp: 65.99
+17:50:22:788 -> Heater Temp: 65.36
+17:50:25:795 -> Heater Temp: 65.29
+17:50:31:894 -> Heater Temp: 65.16
+17:50:34:902 -> Heater Temp: 65.97
+17:50:37:921 -> Heater Temp: 65.91
+17:50:40:916 -> Heater Temp: 66.02
+17:50:47:116 -> Heater Temp: 65.99
+17:50:50:123 -> Heater Temp: 66.29
+17:50:53:131 -> Heater Temp: 66.57
+17:50:56:138 -> Heater Temp: 65.71
+17:51:02:238 -> Heater Temp: 65.91
+17:51:05:245 -> Heater Temp: 66.12
+17:51:08:256 -> Heater Temp: 66.24
+17:51:11:261 -> Heater Temp: 66.34
+17:51:17:361 -> Heater Temp: 66.27
+17:51:20:391 -> Heater Temp: 65.79
+17:51:23:376 -> Heater Temp: 66.27
+17:51:26:382 -> Heater Temp: 67.05
+17:51:32:592 -> Heater Temp: 66.47
+17:51:35:588 -> Heater Temp: 66.67
+17:51:38:594 -> Heater Temp: 67.07
+17:51:42:028 -> Heater Temp: 66.90
+17:51:47:753 -> Heater Temp: 67.05
+17:51:50:706 -> Heater Temp: 67.37
+17:51:53:713 -> Heater Temp: 67.83
+17:51:57:418 -> Heater Temp: 67.40
+17:52:02:820 -> Heater Temp: 67.65
+17:52:05:827 -> Heater Temp: 67.50
+17:52:08:834 -> Heater Temp: 68.15
+17:52:12:981 -> Heater Temp: 67.32
+17:52:18:049 -> Heater Temp: 67.75
+17:52:21:057 -> Heater Temp: 67.05
+17:52:24:064 -> Heater Temp: 66.75
+17:52:28:566 -> Heater Temp: 67.78
+17:52:33:171 -> Heater Temp: 67.25
+17:52:36:178 -> Heater Temp: 68.20
+17:52:39:185 -> Heater Temp: 67.63
+17:52:44:088 -> Heater Temp: 67.70
+17:52:48:392 -> Heater Temp: 68.33
+17:52:51:398 -> Heater Temp: 68.61
+17:52:54:423 -> Heater Temp: 67.22
+17:52:59:705 -> Heater Temp: 68.03
+17:53:03:514 -> Heater Temp: 68.58
+17:53:06:518 -> Heater Temp: 68.96
+17:53:09:524 -> Heater Temp: 68.56
+17:53:15:123 -> Heater Temp: 68.93
+17:53:18:629 -> Heater Temp: 67.95
+17:53:21:636 -> Heater Temp: 67.42
+17:53:24:643 -> Heater Temp: 69.69
+17:53:30:642 -> Heater Temp: 67.55
+17:53:33:849 -> Heater Temp: 68.56
+17:53:36:855 -> Heater Temp: 68.28
+17:53:39:862 -> Heater Temp: 68.96
+17:53:45:961 -> Heater Temp: 68.91
+17:53:48:968 -> Heater Temp: 68.23
+17:53:51:976 -> Heater Temp: 68.76
+17:53:54:983 -> Heater Temp: 69.01
+17:54:01:082 -> Heater Temp: 68.66
+17:54:04:089 -> Heater Temp: 68.88
+17:54:07:095 -> Heater Temp: 68.78
+17:54:10:102 -> Heater Temp: 68.51
+17:54:16:315 -> Heater Temp: 68.78
+17:54:16:984 -> Heater Temp: 69.06
+17:54:17:174 -> Heater Temp: 69.34
+17:54:18:662 -> Heater Temp: 69.51
+17:54:21:667 -> Heater Temp: 69.04
+17:54:24:674 -> Heater Temp: 68.53
+17:54:30:873 -> Heater Temp: 68.76
+17:54:33:879 -> Heater Temp: 68.96
+17:54:36:884 -> Heater Temp: 68.23
+17:54:39:890 -> Heater Temp: 69.36
+17:54:45:987 -> Heater Temp: 68.76
+17:54:48:992 -> Heater Temp: 69.64
+17:54:52:000 -> Heater Temp: 69.59
+17:54:55:005 -> Heater Temp: 68.46
+17:55:01:102 -> Heater Temp: 69.14
+17:55:04:108 -> Heater Temp: 68.88
+17:55:07:114 -> Heater Temp: 68.81
+17:55:10:120 -> Heater Temp: 69.77
+17:55:16:311 -> Heater Temp: 68.78
+17:55:19:318 -> Heater Temp: 69.74
+17:55:22:325 -> Heater Temp: 69.77
+17:55:25:333 -> Heater Temp: 68.86
+17:55:31:429 -> Heater Temp: 69.14
+17:55:34:435 -> Heater Temp: 70.14
+17:55:37:442 -> Heater Temp: 69.92
+17:55:40:747 -> Heater Temp: 69.14
+17:55:46:546 -> Heater Temp: 68.58
+17:55:49:555 -> Heater Temp: 69.46
+17:55:52:560 -> Heater Temp: 69.59
+17:55:57:366 -> Heater Temp: 69.34
+17:55:57:881 -> Dryout Time Calculation: 19
+17:56:00:221 -> Heater Temp: 69.56
+17:56:03:135 -> Heater Temp: 69.44
+17:56:06:057 -> Heater Temp: 69.77
+17:56:12:173 -> Heater Temp: 68.78
+17:56:15:097 -> Heater Temp: 69.79
+17:56:18:024 -> Heater Temp: 70.57
+17:56:20:947 -> Heater Temp: 69.74
+17:56:26:962 -> Heater Temp: 69.69
+17:56:29:986 -> Heater Temp: 70.02
+17:56:32:909 -> Heater Temp: 69.94
+17:56:35:833 -> Heater Temp: 69.56
+17:56:41:749 -> Heater Temp: 69.59
+17:56:44:872 -> Heater Temp: 68.86
+17:56:47:796 -> Heater Temp: 68.98
+17:56:50:719 -> Heater Temp: 69.46
+17:56:56:653 -> Heater Temp: 68.48
+17:56:59:759 -> Heater Temp: 69.31
+17:57:02:683 -> Heater Temp: 69.84
+17:57:05:606 -> Heater Temp: 68.81
+17:57:11:423 -> Heater Temp: 68.48
+17:57:14:646 -> Heater Temp: 69.04
+17:57:17:570 -> Heater Temp: 69.11
+17:57:20:499 -> Heater Temp: 69.16
+17:57:26:215 -> Heater Temp: 69.71
+17:57:29:538 -> Heater Temp: 68.81
+17:57:32:463 -> Heater Temp: 69.51
+17:57:35:387 -> Heater Temp: 69.26
+17:57:41:005 -> Heater Temp: 68.88
+17:57:44:427 -> Heater Temp: 69.01
+17:57:47:351 -> Heater Temp: 69.46
+17:57:50:274 -> Heater Temp: 68.96
+17:57:55:893 -> Heater Temp: 68.58
+17:57:59:314 -> Heater Temp: 68.76
+17:58:02:238 -> Heater Temp: 69.46
+17:58:05:163 -> Heater Temp: 68.76
+17:58:10:680 -> Heater Temp: 69.01
+17:58:14:247 -> Heater Temp: 68.63
+17:58:17:127 -> Heater Temp: 67.95
+17:58:20:052 -> Heater Temp: 68.58
+17:58:25:464 -> Heater Temp: 69.34
+17:58:29:086 -> Heater Temp: 68.28
+17:58:32:010 -> Heater Temp: 67.75
+17:58:34:934 -> Heater Temp: 68.61
+17:58:40:251 -> Heater Temp: 68.10
+17:58:43:972 -> Heater Temp: 67.50
+17:58:46:896 -> Heater Temp: 67.78
+17:58:49:819 -> Heater Temp: 68.28
+17:58:55:139 -> Heater Temp: 68.33
+17:58:58:859 -> Heater Temp: 68.13
+17:59:01:782 -> Heater Temp: 68.56
+17:59:04:706 -> Heater Temp: 67.40
+17:59:09:923 -> Heater Temp: 68.03
+17:59:13:744 -> Heater Temp: 67.58
+17:59:16:668 -> Heater Temp: 68.41
+17:59:19:634 -> Heater Temp: 69.09
+17:59:24:708 -> Heater Temp: 67.65
+17:59:28:631 -> Heater Temp: 67.73
+17:59:31:554 -> Heater Temp: 67.73
+17:59:34:478 -> Heater Temp: 68.05
+17:59:39:495 -> Heater Temp: 66.82
+17:59:43:515 -> Heater Temp: 67.12
+17:59:46:439 -> Heater Temp: 67.68
+17:59:49:362 -> Heater Temp: 67.37
+17:59:54:381 -> Heater Temp: 65.91
+17:59:58:566 -> Heater Temp: 66.04
+18:00:01:600 -> Heater Temp: 67.45
+18:00:04:580 -> Heater Temp: 67.35
+18:00:10:179 -> Heater Temp: 67.02
+18:00:13:684 -> Heater Temp: 67.35
+18:00:16:698 -> Heater Temp: 67.22
+18:00:19:697 -> Heater Temp: 66.97
+18:00:25:626 -> Heater Temp: 66.47
+18:00:28:805 -> Heater Temp: 66.39
+18:00:31:811 -> Heater Temp: 66.59
+18:00:34:817 -> Heater Temp: 67.05
+18:00:40:917 -> Heater Temp: 65.74
+18:00:43:924 -> Heater Temp: 67.07
+18:00:46:930 -> Heater Temp: 67.50
+18:00:49:936 -> Heater Temp: 67.15
+18:00:56:134 -> Heater Temp: 67.15
+18:00:59:141 -> Heater Temp: 66.72
+18:01:02:148 -> Heater Temp: 67.47
+18:01:05:154 -> Heater Temp: 67.90
+18:01:11:252 -> Heater Temp: 66.52
+18:01:14:259 -> Heater Temp: 67.15
+18:01:17:266 -> Heater Temp: 68.41
+18:01:20:274 -> Heater Temp: 67.73
+18:01:26:472 -> Heater Temp: 67.50
+18:01:29:476 -> Heater Temp: 67.88
+18:01:32:484 -> Heater Temp: 67.70
+18:01:35:490 -> Heater Temp: 67.68
+18:01:41:588 -> Heater Temp: 67.05
+18:01:44:595 -> Heater Temp: 68.03
+18:01:47:623 -> Heater Temp: 67.90
+18:01:50:708 -> Heater Temp: 68.15
+18:01:56:709 -> Heater Temp: 66.87
+18:01:59:715 -> Heater Temp: 67.65
+18:02:02:755 -> Heater Temp: 68.08
+18:02:06:228 -> Heater Temp: 67.80
+18:02:11:928 -> Heater Temp: 68.43
+18:02:14:980 -> Heater Temp: 68.58
+18:02:17:943 -> Heater Temp: 69.14
+18:02:21:847 -> Heater Temp: 68.33
+18:02:27:048 -> Heater Temp: 68.00
+18:02:30:058 -> Heater Temp: 68.76
+18:02:33:065 -> Heater Temp: 67.70
+18:02:37:368 -> Heater Temp: 67.93
+18:02:42:270 -> Heater Temp: 67.90
+18:02:45:278 -> Heater Temp: 67.68
+18:02:48:285 -> Heater Temp: 68.18
+18:02:52:987 -> Heater Temp: 68.71
+18:02:57:414 -> Heater Temp: 67.85
+18:03:00:395 -> Heater Temp: 68.31
+18:03:03:401 -> Heater Temp: 69.44
+18:03:08:403 -> Heater Temp: 69.01
+18:03:12:505 -> Heater Temp: 68.08
+18:03:15:511 -> Heater Temp: 68.43
+18:03:18:517 -> Heater Temp: 68.41
+18:03:23:917 -> Heater Temp: 69.09
+18:03:27:720 -> Heater Temp: 68.31
+18:03:30:726 -> Heater Temp: 68.56
+18:03:33:733 -> Heater Temp: 68.56
+18:03:39:531 -> Heater Temp: 68.48
+18:03:42:837 -> Heater Temp: 68.88
+18:03:45:843 -> Heater Temp: 68.86
+18:03:48:850 -> Heater Temp: 69.61
+18:03:55:045 -> Heater Temp: 68.76
+18:03:58:052 -> Heater Temp: 68.58
+18:04:01:058 -> Heater Temp: 68.81
+18:04:04:064 -> Heater Temp: 68.76
+18:04:10:161 -> Heater Temp: 68.96
+18:04:13:168 -> Heater Temp: 68.73
+18:04:16:172 -> Heater Temp: 69.26
+18:04:19:179 -> Heater Temp: 67.60
+18:04:25:275 -> Heater Temp: 68.58
+18:04:28:282 -> Heater Temp: 68.41
+18:04:31:289 -> Heater Temp: 68.71
+18:04:34:295 -> Heater Temp: 68.10
+18:04:40:492 -> Heater Temp: 67.83
+18:04:43:499 -> Heater Temp: 69.06
+18:04:46:505 -> Heater Temp: 69.09
+18:04:49:511 -> Heater Temp: 68.73
+18:04:55:608 -> Heater Temp: 68.58
+18:04:58:614 -> Heater Temp: 69.01
+18:05:01:621 -> Heater Temp: 69.46
+18:05:04:727 -> Heater Temp: 69.51
+18:05:10:825 -> Heater Temp: 69.14
+18:05:13:831 -> Heater Temp: 69.94
+18:05:16:837 -> Heater Temp: 69.41

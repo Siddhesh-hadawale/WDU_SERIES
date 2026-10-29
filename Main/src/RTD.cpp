@@ -60,8 +60,8 @@ void PT100::read_temperature()
 
         Heater_temp = ((Rt / R0) - 1) / Alpha;
         calib_Heater1 = Heater_temp + temp_error;
-        // Serial3.print("Heater Temp: ");
-        // Serial3.println(calib_Heater1);
+        Serial3.print("Heater Temp: ");
+        Serial3.println(calib_Heater1);
         // Reset sampling
         sample = 0;
         TotalVout = 0;

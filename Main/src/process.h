@@ -15,6 +15,7 @@ class process
     void secondary_fill();
     void dryout_fill();
     void process_stop();
+    void Probe_misplace(float currentTemp);
 
     void water_level_detection();
     void parameter_test();

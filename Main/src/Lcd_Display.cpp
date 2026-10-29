@@ -441,6 +441,11 @@ void lcdclass::lcd_display()
                     lcd.print(".");
                     lcd.print(remaining_volume%10);
                     lcd.print(" LITERS         ");
+
+                    if(calib_Heater1 < 55 && dduflag)
+                    {
+                        process_object.Probe_misplace(calib_Heater1);
+                    }
                 }
                 process_object.process_start();
             }
@@ -694,6 +699,16 @@ void lcdclass::lcd_display()
                 digitalWrite(RED_LED,LOW);
                 if(toggle)
                 {
+                    
+                    if(probe_misplace_error_flag)
+                    {
+                        digitalWrite(YELLOW_LED,HIGH);
+                        lcd.setCursor(0,0);
+                        lcd.print("FALSE DETECTION");
+                        lcd.setCursor(0,1);
+                        lcd.print("CHECK SEC.PROBE");
+                    }
+
                     if(closetap)                   // Solenoid Error
                     {
                         digitalWrite(YELLOW_LED,HIGH);
@@ -703,6 +718,7 @@ void lcdclass::lcd_display()
                         lcd.print("   WATER TAP    ");
                         
                     }
+
 
                     if(Secodaryfill_error_flag)
                     {
@@ -794,7 +810,7 @@ void lcdclass::lcd_display()
                 digitalWrite(BUZZER,LOW);
             }
 
-            if(!Secodaryfill_error_flag && !closetap &&
+            if(!probe_misplace_error_flag && !Secodaryfill_error_flag && !closetap &&
                
             (process_flag || secondarytimerflag || preheat_flag))
             {

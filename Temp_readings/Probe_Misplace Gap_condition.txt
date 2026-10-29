@@ -1,0 +1,225 @@
+18:27:13:480 -> Heater Temp: 39.08
+18:27:15:817 -> Heater Temp: 37.75
+18:27:18:155 -> Heater Temp: 37.53
+18:27:20:496 -> Heater Temp: 37.05
+18:27:22:833 -> Heater Temp: 36.48
+18:27:23:394 -> Dryout Time Calculation: 19
+18:27:25:668 -> Heater Temp: 36.88
+18:27:28:592 -> Heater Temp: 35.95
+18:27:31:516 -> Heater Temp: 35.87
+18:27:37:135 -> Heater Temp: 35.80
+18:27:40:558 -> Heater Temp: 35.45
+18:27:43:483 -> Heater Temp: 35.45
+18:27:46:408 -> Heater Temp: 34.77
+18:27:51:928 -> Heater Temp: 35.30
+18:27:55:452 -> Heater Temp: 35.35
+18:27:58:377 -> Heater Temp: 35.45
+18:28:01:302 -> Heater Temp: 35.25
+18:28:06:722 -> Heater Temp: 35.05
+18:28:10:345 -> Heater Temp: 35.02
+18:28:13:271 -> Heater Temp: 34.75
+18:28:16:196 -> Heater Temp: 35.22
+18:28:21:512 -> Heater Temp: 35.27
+18:28:25:235 -> Heater Temp: 35.20
+18:28:28:160 -> Heater Temp: 35.55
+18:28:31:084 -> Heater Temp: 35.37
+18:28:36:304 -> Heater Temp: 34.95
+18:28:40:127 -> Heater Temp: 34.57
+18:28:43:052 -> Heater Temp: 34.92
+18:28:45:988 -> Heater Temp: 35.45
+18:28:51:196 -> Heater Temp: 34.97
+18:28:55:018 -> Heater Temp: 34.97
+18:28:57:944 -> Heater Temp: 35.22
+18:29:00:867 -> Heater Temp: 34.95
+18:29:05:988 -> Heater Temp: 34.92
+18:29:09:910 -> Heater Temp: 34.67
+18:29:12:835 -> Heater Temp: 34.65
+18:29:15:760 -> Heater Temp: 35.25
+18:29:20:781 -> Heater Temp: 35.00
+18:29:24:809 -> Heater Temp: 34.92
+18:29:27:733 -> Heater Temp: 35.52
+18:29:30:658 -> Heater Temp: 35.25
+18:29:35:578 -> Heater Temp: 35.27
+18:29:39:700 -> Heater Temp: 35.27
+18:29:42:625 -> Heater Temp: 35.27
+18:29:45:550 -> Heater Temp: 35.22
+18:29:50:470 -> Heater Temp: 35.35
+18:29:54:592 -> Heater Temp: 35.00
+18:29:57:517 -> Heater Temp: 35.07
+18:30:00:441 -> Heater Temp: 35.45
+18:30:05:261 -> Heater Temp: 34.97
+18:30:09:482 -> Heater Temp: 35.10
+18:30:12:410 -> Heater Temp: 35.17
+18:30:15:330 -> Heater Temp: 35.22
+18:30:20:051 -> Heater Temp: 35.00
+18:30:24:371 -> Heater Temp: 35.20
+18:30:27:296 -> Heater Temp: 34.85
+18:30:30:220 -> Heater Temp: 35.47
+18:30:34:841 -> Heater Temp: 35.42
+18:30:39:263 -> Heater Temp: 35.00
+18:30:42:187 -> Heater Temp: 35.37
+18:30:45:112 -> Heater Temp: 35.27
+18:30:49:633 -> Heater Temp: 35.12
+18:30:54:155 -> Heater Temp: 35.07
+18:30:57:080 -> Heater Temp: 35.07
+18:31:00:006 -> Heater Temp: 35.25
+18:31:04:527 -> Heater Temp: 35.05
+18:31:09:049 -> Heater Temp: 35.45
+18:31:11:974 -> Heater Temp: 35.07
+18:31:14:899 -> Heater Temp: 35.12
+18:31:19:322 -> Heater Temp: 35.00
+18:31:21:748 -> Start temperature: 51.39 °C | Current temperature: 35.00   C | Rise: -16.39   C
+18:31:21:834 -> Insufficient temperature rise count: 1
+18:31:24:063 -> Heater Temp: 34.70
+18:31:27:072 -> Heater Temp: 35.50
+18:31:30:080 -> Heater Temp: 35.02
+18:31:35:084 -> Heater Temp: 35.25
+18:31:39:291 -> Heater Temp: 35.02
+18:31:42:299 -> Heater Temp: 35.45
+18:31:45:307 -> Heater Temp: 35.22
+18:31:50:809 -> Heater Temp: 34.90
+18:31:51:769 -> Start temperature: 35.00   C | Current temperature: 34.90   C | Rise: -0.10   C
+18:31:51:856 -> Insufficient temperature rise count: 2
+18:31:54:473 -> Heater Temp: 35.72
+18:31:57:481 -> Heater Temp: 35.15
+18:32:00:488 -> Heater Temp: 34.95
+18:32:06:389 -> Heater Temp: 35.22
+18:32:09:696 -> Heater Temp: 35.27
+18:32:12:703 -> Heater Temp: 35.65
+18:32:15:711 -> Heater Temp: 35.12
+18:32:21:690 -> Start temperature: 34.90 °C | Current temperature: 35.12   C | Rise: 0.23   C
+18:32:21:774 -> Insufficient temperature rise count: 3
+18:32:21:923 -> Heater Temp: 35.22
+18:32:24:874 -> Heater Temp: 35.60
+18:32:27:882 -> Heater Temp: 34.97
+18:32:30:888 -> Heater Temp: 35.30
+18:32:37:088 -> Heater Temp: 35.42
+18:32:40:096 -> Heater Temp: 35.72
+18:32:43:103 -> Heater Temp: 35.67
+18:32:46:111 -> Heater Temp: 35.17
+18:32:51:608 -> Start temperature: 35.12   C | Current temperature: 35.17   C | Rise: 0.05   C
+18:32:51:692 -> Insufficient temperature rise count: 4
+18:32:52:266 -> Heater Temp: 35.90
+18:32:55:273 -> Heater Temp: 36.17
+18:32:58:280 -> Heater Temp: 35.27
+18:33:01:287 -> Heater Temp: 36.20
+18:33:07:385 -> Heater Temp: 36.50
+18:33:10:392 -> Heater Temp: 36.83
+18:33:13:400 -> Heater Temp: 37.15
+18:33:16:407 -> Heater Temp: 36.55
+18:33:21:523 -> Start temperature: 35.17 °C | Current temperature: 36.55 °C | Rise: 1.38 °C
+18:33:21:608 -> Temperature is increasing normally
+18:33:22:658 -> Heater Temp: 36.27
+18:33:25:665 -> Heater Temp: 38.95
+18:33:28:673 -> Heater Temp: 38.10
+18:33:32:179 -> Heater Temp: 38.00
+18:33:37:779 -> Heater Temp: 37.98
+18:33:40:786 -> Heater Temp: 40.63
+18:33:43:794 -> Heater Temp: 40.56
+18:33:47:599 -> Heater Temp: 40.41
+18:33:51:457 -> Start temperature: 36.55   C | Current temperature: 40.41   C | Rise: 3.86   C
+18:33:51:540 -> Temperature is increasing normally
+18:33:52:953 -> Heater Temp: 40.71
+18:33:55:960 -> Heater Temp: 41.03
+18:33:58:967 -> Heater Temp: 40.96
+18:34:03:171 -> Heater Temp: 41.26
+18:34:08:074 -> Heater Temp: 41.46
+18:34:11:081 -> Heater Temp: 41.46
+18:34:14:089 -> Heater Temp: 42.19
+18:34:18:692 -> Heater Temp: 41.66
+18:34:21:369 -> Start temperature: 40.41   C | Current temperature: 41.66 °C | Rise: 1.25 °C
+18:34:21:474 -> Temperature is increasing normally
+18:34:23:346 -> Heater Temp: 41.46
+18:34:26:353 -> Heater Temp: 41.69
+18:34:29:359 -> Heater Temp: 42.09
+18:34:34:460 -> Heater Temp: 41.89
+18:34:38:465 -> Heater Temp: 42.14
+18:34:41:472 -> Heater Temp: 41.94
+18:34:44:478 -> Heater Temp: 41.91
+18:34:49:878 -> Heater Temp: 42.59
+18:34:51:306 -> Start temperature: 41.66   C | Current temperature: 42.59 °C | Rise: 0.93 °C
+18:34:51:425 -> Insufficient temperature rise count: 1
+18:34:53:639 -> Heater Temp: 42.96
+18:34:56:646 -> Heater Temp: 42.84
+18:34:59:656 -> Heater Temp: 43.46
+18:35:05:452 -> Heater Temp: 42.86
+18:35:08:758 -> Heater Temp: 43.79
+18:35:11:765 -> Heater Temp: 43.92
+18:35:14:772 -> Heater Temp: 44.54
+18:35:20:970 -> Heater Temp: 43.72
+18:35:21:211 -> Start temperature: 42.59 °C | Current temperature: 43.72   C | Rise: 1.13   C
+18:35:21:297 -> Temperature is increasing normally
+18:35:24:030 -> Heater Temp: 45.40
+18:35:27:037 -> Heater Temp: 44.52
+18:35:30:044 -> Heater Temp: 44.74
+18:35:36:141 -> Heater Temp: 45.09
+18:35:39:148 -> Heater Temp: 45.75
+18:35:42:155 -> Heater Temp: 45.57
+18:35:45:162 -> Heater Temp: 45.77
+18:35:51:141 -> Start temperature: 43.72   C | Current temperature: 45.77   C | Rise: 2.06   C
+18:35:51:229 -> Temperature is increasing normally
+18:35:51:314 -> Heater Temp: 45.45
+18:35:54:321 -> Heater Temp: 46.20
+18:35:57:328 -> Heater Temp: 45.22
+18:36:00:336 -> Heater Temp: 45.87
+18:36:06:435 -> Heater Temp: 45.40
+18:36:09:442 -> Heater Temp: 46.45
+18:36:12:450 -> Heater Temp: 46.40
+18:36:15:457 -> Heater Temp: 45.35
+18:36:21:053 -> Start temperature: 45.77   C | Current temperature: 45.35   C | Rise: -0.43   C
+18:36:21:137 -> Insufficient temperature rise count: 1
+18:36:21:712 -> Heater Temp: 45.47
+18:36:24:719 -> Heater Temp: 46.35
+18:36:27:726 -> Heater Temp: 45.92
+18:36:31:032 -> Heater Temp: 45.97
+18:36:36:831 -> Heater Temp: 46.07
+18:36:39:837 -> Heater Temp: 46.55
+18:36:42:844 -> Heater Temp: 45.70
+18:36:46:556 -> Heater Temp: 45.77
+18:36:50:966 -> Start temperature: 45.35 °C | Current temperature: 45.77 °C | Rise: 0.43   C
+18:36:51:060 -> Insufficient temperature rise count: 2
+18:36:52:105 -> Heater Temp: 45.72
+18:36:55:112 -> Heater Temp: 46.70
+18:36:58:118 -> Heater Temp: 46.62
+18:37:02:321 -> Heater Temp: 46.40
+18:37:07:223 -> Heater Temp: 46.47
+18:37:10:231 -> Heater Temp: 46.42
+18:37:13:238 -> Heater Temp: 46.27
+18:37:17:741 -> Heater Temp: 46.30
+18:37:20:900 -> Start temperature: 45.77   C | Current temperature: 46.30   C | Rise: 0.53   C
+18:37:20:985 -> Insufficient temperature rise count: 3
+18:37:22:400 -> Heater Temp: 46.85
+18:37:25:407 -> Heater Temp: 46.93
+18:37:28:413 -> Heater Temp: 47.38
+18:37:33:414 -> Heater Temp: 46.57
+18:37:37:617 -> Heater Temp: 47.55
+18:37:40:624 -> Heater Temp: 47.70
+18:37:43:631 -> Heater Temp: 47.23
+18:37:49:032 -> Heater Temp: 46.80
+18:37:50:812 -> Start temperature: 46.30 °C | Current temperature: 46.80 °C | Rise: 0.50 °C
+18:37:50:905 -> Insufficient temperature rise count: 4
+18:37:52:793 -> Heater Temp: 48.53
+18:37:55:800 -> Heater Temp: 48.08
+18:37:58:807 -> Heater Temp: 49.13
+18:38:04:605 -> Heater Temp: 47.88
+18:38:07:911 -> Heater Temp: 47.98
+18:38:10:918 -> Heater Temp: 48.58
+18:38:13:926 -> Heater Temp: 47.35
+18:38:20:123 -> Heater Temp: 47.78
+18:38:20:724 -> Start temperature: 46.80   C | Current temperature: 47.78   C | Rise: 0.98   C
+18:38:20:809 -> Insufficient temperature rise count: 5
+18:38:20:849 -> WARNING: Insufficient temperature rise!
+18:38:20:895 -> BUZZER TOGGLE START
+18:38:22:873 -> Heater Temp: 48.86
+18:38:25:404 -> Heater Temp: 48.56
+18:38:27:942 -> Heater Temp: 49.21
+18:38:30:504 -> Heater Temp: 48.61
+18:38:33:024 -> Heater Temp: 48.83
+18:38:35:580 -> Heater Temp: 49.51
+18:38:38:123 -> Heater Temp: 49.13
+18:38:40:650 -> Heater Temp: 49.08
+18:38:43:217 -> Heater Temp: 48.63
+18:38:43:659 -> BUZZER TOGGLE STOP
+18:38:45:532 -> Heater Temp: 49.86
+18:38:47:868 -> Heater Temp: 49.58
+18:38:50:204 -> Heater Temp: 48.53

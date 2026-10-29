@@ -30,7 +30,8 @@ void setup() {
   // Configure watchdog timer: ~8192/1024 = 8s timeout (8192 cycles)
   protected_write_io(WDT.CTRLA, WDT_PERIOD_8KCLK_gc);  
   lcd_object.lcd_setup();    // Initialize LCD
-  Serial3.begin(9600);      // Start serial communication        
+  Serial3.begin(9600);      // Start serial communication    
+  Serial3.println("Start");    
   eeprom_object.eeprom_update_sensor();// Update EEPROM with Sensors default values
   buttonClass_object.button_setup();  // Initialize button module
   buzzerclass_object.buzzer_setup();  // Initialize buzzer module
@@ -91,6 +92,7 @@ ISR(TCA0_OVF_vect)
 /*================ Main Execution Loop ================*/
 void loop()
 {
+  // Serial3.println("Start");
   __builtin_avr_wdr();                // Watchdog timer reset to prevent system reset
 
   lcd_object.lcd_display();           // Update LCD screen
